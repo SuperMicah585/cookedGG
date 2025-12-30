@@ -1,11 +1,19 @@
 import dotenv from 'dotenv'
 dotenv.config()         
-
+import pkg from 'pg';
 import express from 'express'
 import cors from 'cors'
 const app = express()
 const PORT = process.env.PORT || 3000  // read from .env
 
+const { Pool } = pkg;
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 // Enable CORS for all origins
 app.use(cors())
 
@@ -228,7 +236,7 @@ app.get('/api/getMetaDataFor/:puuid/inregion/:region', async (req, res) => {
     
     console.error(error);
 
-    const statusCode = error.eror || error.response?.status || 500;
+    const statusCode = error.error || error.response?.status || 500;
 
     return res.status(statusCode).json({
       error: true,
@@ -237,6 +245,94 @@ app.get('/api/getMetaDataFor/:puuid/inregion/:region', async (req, res) => {
   }
 
 });
+
+app.get('/api/getworstmmr', async (req, res) => {
+  try {
+    // Sort by elo_difference ascending and limit to top 10
+    const result = await pool.query(
+      'SELECT * FROM users ORDER BY elo_difference DESC LIMIT 10'
+    );
+
+    return res.json({
+      success: true,
+      data: result.rows
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    const statusCode = error.status || error.response?.status || 500;
+
+    return res.status(statusCode).json({
+      error: true,
+      message: error.message
+    });
+  }
+});
+
+
+app.post('/api/updateUser', async (req, res) => {
+  try {
+    const { 
+      puuid, 
+      name, 
+      tag, 
+      region, 
+      tier, 
+      rank, 
+      leaguepoints, 
+      elo_difference, 
+      wins, 
+      losses 
+    } = req.body;
+
+    // Validate required fields
+    if (!puuid || !name) {
+      return res.status(400).json({
+        error: true,
+        message: 'puiid and name are required'
+      });
+    }
+
+    // Insert or update (upsert) - if puiid exists, update it
+    const result = await pool.query(
+      `INSERT INTO users (puuid, name, tag, region, tier, rank, leaguepoints, elo_difference, wins, losses)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+       ON CONFLICT (puuid) 
+       DO UPDATE SET
+         name = EXCLUDED.name,
+         tag = EXCLUDED.tag,
+         region = EXCLUDED.region,
+         tier = EXCLUDED.tier,
+         rank = EXCLUDED.rank,
+         leaguepoints = EXCLUDED.leaguepoints,
+         elo_difference = EXCLUDED.elo_difference,
+         wins = EXCLUDED.wins,
+         losses = EXCLUDED.losses
+       RETURNING *`,
+      [puuid, name, tag, region, tier, rank, leaguepoints, elo_difference, wins, losses]
+    );
+
+    return res.json({
+      success: true,
+      message: 'User updated successfully',
+      data: result.rows[0]
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    const statusCode = error.status || error.response?.status || 500;
+
+    return res.status(statusCode).json({
+      error: true,
+      message: error.message
+    });
+  }
+});
+
+
+
 
 
 app.listen(PORT, () => {
