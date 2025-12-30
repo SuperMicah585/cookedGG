@@ -3,16 +3,32 @@ import NavBar from '../components/navBar'
 import { useParams } from 'react-router-dom';
 import { useState,useEffect } from 'react';
 import CookedStatus from '../components/playerDisplayComponents/cookedStatus';
-import {getMatchData,userValidation,getUserMetaData} from '../services/userData.js'
+import {getMatchData,userValidation,getUserMetaData,updateUser} from '../services/userData.js'
 import { useMutation } from '@tanstack/react-query'
+import { tierToPoints } from '../functions/rank_calculations';
+function averageDifference(arr1, arr2) {
+  if (arr1.length !== arr2.length) {
+    throw new Error('Arrays must be the same length');
+  }
+  
+  let sum = 0;
+  for (let i = 0; i < arr1.length; i++) {
+    sum += arr1[i] - arr2[i];
+  }
+  
+  return sum / arr1.length;
+}
+
 
 
 const UserDisplay = () =>{
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [puuid, setPuuid] = useState('')
+  const [summoner, setSummoner] = useState([])
   const [userMetaDataObject,setUserMetaDataObject] = useState([])
   const [userMatches,setUserMatches] = useState([])
   const { player,tag,region } = useParams();
+  const [avgDifference, setAvgDifference] = useState(0)
+  const [userData,setUserData] = useState([])
  
 const validationMutation = useMutation({
   mutationFn: async ({ player, tag, region }) => {
@@ -20,7 +36,7 @@ const validationMutation = useMutation({
   },
   onSuccess: (data, variables) => {
     const { summoner } = data
-    setPuuid(summoner.puuid)
+    setSummoner([summoner])
     
   },
   onError: (error) => {
@@ -31,8 +47,8 @@ const validationMutation = useMutation({
 
 
 const userMatchData = useMutation({
-  mutationFn: async ({ puuid,region }) => {
-    return getMatchData(puuid, region)
+  mutationFn: async ({ summoner,region }) => {
+    return getMatchData(summoner[0].puuid, region)
   },
   onSuccess: (data) => {
     const { matchData } = data
@@ -48,8 +64,8 @@ const userMatchData = useMutation({
 
 
 const userMetaData = useMutation({
-  mutationFn: async ({ puuid,region }) => {
-    return getUserMetaData(puuid, region)
+  mutationFn: async ({ summoner,region }) => {
+    return getUserMetaData(summoner[0].puuid, region)
   },
   onSuccess: (data) => {
     const { playerMetaData } = data
@@ -61,6 +77,46 @@ const userMetaData = useMutation({
     setInputErrorMessage(error.message ?? "Validation failed")
   },
 })
+
+
+const updateUsertable = useMutation({
+  mutationFn: async ({ userData }) => {
+    return updateUser(userData)
+  },
+  onSuccess: (data) => {
+    const { userData } = data
+    console.log(userData)
+    
+  },
+  onError: (error) => {
+    setInputError(true)
+    setInputErrorMessage(error.message ?? "Validation failed")
+  },
+})
+
+  useEffect(()=>{
+    if(avgDifference!=0 && summoner.length>0 && userMetaDataObject.length>0){
+
+    const userData = {
+      puuid: summoner[0].puuid,
+      name: player,
+      tag: tag,
+      region: region,
+      tier: userMetaDataObject[0].tier,
+      rank: userMetaDataObject[0].rank,
+      leaguepoints: userMetaDataObject[0].leaguePoints,
+      elo_difference: avgDifference,
+      wins: userMetaDataObject[0].wins,
+      losses: userMetaDataObject[0].losses
+
+    };
+    console.log(userData)
+
+      updateUsertable.mutate({userData})
+    }
+
+
+  },[avgDifference,summoner])
 
 
   useEffect(() => {
@@ -79,9 +135,9 @@ const userMetaData = useMutation({
 
   useEffect(() => {
 
-    if(puuid.length>0 && region.length>0){
-    userMatchData.mutate({puuid,region})
-    userMetaData.mutate({puuid,region})
+    if(summoner.length>0 && region.length>0){
+    userMatchData.mutate({summoner,region})
+    userMetaData.mutate({summoner,region})
     }
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -89,11 +145,44 @@ const userMetaData = useMutation({
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [puuid,region]);
+  }, [summoner,region]);
 
 
 
-  
+  useEffect(() => {
+  if (userMatches && userMatches.length > 0) {
+    const myRiotId = player + '#' + tag;
+    
+    const flatMatches = userMatches.flat();
+    
+    // Get player rank points directly
+    const playerPoints = flatMatches
+      .filter((item) => item.riot_id?.toLowerCase() === myRiotId?.toLowerCase())
+      .map((item) => tierToPoints(item.ranked?.rating_text))
+      .filter(points => points > 0); // Remove 0 values (unranked)
+    
+
+
+    
+    // Calculate lobby average rank points (excluding the player)
+    const lobbyAveragePoints = [];
+    userMatches.forEach(match => {
+      const ranks = match
+        .filter(item => item.riot_id?.toLowerCase() !== myRiotId?.toLowerCase()) // Exclude player
+        .map(item => item.ranked?.rating_text)
+        .filter(rank => rank); // Remove undefined/null
+      
+      if (ranks.length > 0) {
+        const points = ranks.map(tierToPoints);
+        const avgPoints = points.reduce((a, b) => a + b, 0) / points.length;
+        lobbyAveragePoints.push(Math.round(avgPoints));
+      }
+    });
+    
+    setAvgDifference(averageDifference(playerPoints,lobbyAveragePoints))
+
+  }
+}, [userMatches]);
 
 
 
