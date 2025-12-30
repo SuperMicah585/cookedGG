@@ -1,0 +1,113 @@
+import Input from '@mui/material/Input';
+import InputAdornment from '@mui/material/InputAdornment';
+import React, { useState } from "react";
+import SearchIcon from '@mui/icons-material/Search';
+import FryingPan from '../../assets/ItsCookedLogo.png'
+import { FormControl, Select, MenuItem } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
+
+const SummonerInput = () => {
+  const [region, setRegion] = useState("NA");
+  const [summonerInput, setSummonerInput] = useState("");
+  const [inputError, setInputError] = useState(false);
+  const[inputErrorMessage,setInputErrorMessage] = useState("")
+  const navigate = useNavigate();
+
+
+  const summonerSubmit = () => {
+    if (!summonerInput.includes('#')) {
+      setInputError(true)
+      setInputErrorMessage("Please include the tag by using the '#' character")
+      return
+    }
+
+    const [username, tag] = summonerInput.split('#')
+    
+    navigate(`/player/${username}/${tag}/${region}`)
+  }
+
+  const DropDown = () => {
+    
+
+    const handleChange = (event) => {
+      setRegion(event.target.value);
+    };
+
+    return (
+      <div className='w-20 h-full'> 
+        <FormControl fullWidth variant="standard">
+          <Select
+            value={region}
+            onChange={handleChange}
+            disableUnderline
+            size="small"
+            sx={{
+              "& .MuiSelect-select": {
+                textAlign: "center",
+                padding: "17px 0",
+              },
+            }}
+          >
+            <MenuItem value="NA">NA</MenuItem>
+            <MenuItem value="EUW">EUW</MenuItem>
+            <MenuItem value="KR">KR</MenuItem>
+          </Select>
+        </FormControl>
+      </div> 
+    )
+  }
+
+  return (
+      <div className=" w-96">
+
+
+        <div className = 'flex items-center justify-center w-full h-full h-full z-10 '> 
+          <img className = 'w-12 h-12' src = {FryingPan} />
+          <p className = 'font-bold text-3xl'> CookedGG </p>
+          </div>
+
+
+        <div className='relative h-14'>
+          <div className='absolute left-0 top-0 h-full z-10'> 
+            <DropDown/>
+          </div>
+          
+          <div className='absolute left-0 top-0 h-full w-full'> 
+            <Input
+            className={`bg-white h-full rounded-md pl-24 pr-3 border ${inputError?"border-red-500 border-2":"border-black"}`}
+            fullWidth
+            onChange = {(e) => setSummonerInput(e.target.value)}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                e.preventDefault();
+                summonerSubmit();
+                }
+                else{
+                    setInputError(false)
+                    setInputErrorMessage("")
+
+                }
+            }}
+            placeholder="Search Player (player#TAG)"
+            disableUnderline
+            endAdornment={
+                <InputAdornment position="end">
+                <SearchIcon
+                    onClick = {()=> summonerSubmit()}
+                    sx={{ color: 'gray', cursor: 'pointer' }}
+                />
+                </InputAdornment>
+            }
+            />
+            <div className = "text-red-500 font-bold">
+                {inputErrorMessage}
+            </div>
+          </div>
+        </div>
+      </div>
+
+  )
+};
+
+export default SummonerInput;

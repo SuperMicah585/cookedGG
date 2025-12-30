@@ -1,0 +1,52 @@
+
+
+
+export function tierToPoints(tierString) {
+
+
+const tierBase = {
+  IRON: 0,
+  BRONZE: 400,
+  SILVER: 800,
+  GOLD: 1200,
+  PLATINUM: 1600,
+  EMERALD: 2000,
+  DIAMOND: 2400,
+  MASTER: 2800,
+  GRANDMASTER: 2800,
+  CHALLENGER: 2800,
+};
+
+  if (!tierString) return 0;
+  
+  const romanToNumber = {
+    'I': 1,
+    'II': 2,
+    'III': 3,
+    'IV': 4
+  };
+
+  const parts = tierString.split(" ");
+  const tier = parts[0]?.toUpperCase();
+  const division = romanToNumber[parts[1]];
+  const lp = parseInt(parts[2]);
+
+  if (!(tier in tierBase)) {
+    return 0;
+  }
+
+  let points = tierBase[tier];
+
+  // Only add division points for ranks that have divisions
+  if (tier !== "MASTER" && tier !== "GRANDMASTER" && tier !== "CHALLENGER") {
+    if (division !== undefined) {
+      points += (5 - division) * 100;
+    }
+  }
+
+  if (!isNaN(lp)) {
+    points += lp;
+  }
+
+  return points;
+}
