@@ -72,7 +72,7 @@ async function getRoutingRegion(region,puuid) {
 function getRegion(routingRegion) {
   // Replace digits so “NA1” becomes “NA”
   const result = routingRegion.replace(/\d+/g, '')
-
+  
   const routingRelationship = {
     na: "AMERICAS",
     br: "AMERICAS",

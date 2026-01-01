@@ -16,8 +16,10 @@ import Paper from '@mui/material/Paper';
 import { tierToPoints } from "../../functions/rank_calculations";
 import {getUserPosition} from "../../services/userData"
 import { useMutation } from '@tanstack/react-query'
+import CircularProgress from '@mui/material/CircularProgress';
 
-const CookedStatus = ({userMatches, playerName,userMetaDataObject,tableUpdateTrigger}) =>{
+
+const CookedStatus = ({userMatches, playerName,userMetaDataObject,tableUpdateTrigger, matchDataIsLoading}) =>{
 const [anchorEl, setAnchorEl] = useState(null);
 const [userMetaData,setUserMetaData] = useState({puuid: '', wins:0,losses:0,tier:'',rank:'',leaguePoints:0})
 const [dataForTable, setDataForTable] = useState([])
@@ -143,7 +145,7 @@ return(
       </CardContent>
     </Card>
 
-
+{matchDataIsLoading? <Card elevation={3} ><div className = 'w-full h-96 flex items-center justify-center'> <CircularProgress size={20} /></div></Card>:
         <TableContainer component={Paper}>
       <Table>
         <TableHead>
@@ -167,6 +169,9 @@ return(
         </TableBody>
       </Table>
     </TableContainer>
+
+
+        }
     </div>
 )
 

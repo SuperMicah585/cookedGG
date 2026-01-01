@@ -14,7 +14,7 @@ import {
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import {tierToPoints} from '../../functions/rank_calculations'
-
+import CircularProgress from '@mui/material/CircularProgress';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -28,7 +28,7 @@ ChartJS.register(
 
 
 
-const PlayerAverageGraph = ({userMatches,player,tag}) =>{
+const PlayerAverageGraph = ({userMatches,player,tag, matchDataIsLoading}) =>{
 const [playerRankPoints, setPlayerRankPoints] = useState([])
 const [lobbyAverageRankPoints, setLobbyAverageRankPoints] = useState([])
 
@@ -110,10 +110,13 @@ const options = {
 return(
     <div className = 'w-full h-full'> 
         <Card elevation={3}>
+          {matchDataIsLoading?<div className = 'flex items-center justify-center h-96 '> <CircularProgress size={20} /></div>:
             <CardContent>
       <Line data={data} options={options} />
       </CardContent>
+}
       </Card>
+          
     </div>
 )
 

@@ -63,6 +63,8 @@ const userMatchData = useMutation({
   },
 })
 
+const matchDataIsLoading = userMatchData.isPending 
+
 
 const userMetaData = useMutation({
   mutationFn: async ({ summoner,region }) => {
@@ -201,10 +203,10 @@ return(
       <NavBar/>
 <div className='flex flex-col lg:flex-row w-screen h-screen mt-5'>
     <div className = 'flex flex-col'> 
-    <CookedStatus tableUpdateTrigger = {tableUpdateTrigger} userMatches = {userMatches} userMetaDataObject = {userMetaDataObject} playerName = {`${player}#${tag}`}/>
+    <CookedStatus matchDataIsLoading = {matchDataIsLoading} tableUpdateTrigger = {tableUpdateTrigger} userMatches = {userMatches} userMetaDataObject = {userMetaDataObject} playerName = {`${player}#${tag}`}/>
     </div>
     <div className = 'w-full pl-5 pr-5 sm:pl-10 sm:pr-10 lg:pl-20 lg:pr-20'> 
-     < PlayerAverageGraph key={windowWidth} userMatches = {userMatches} player = {player} tag = {tag}/>
+     < PlayerAverageGraph matchDataIsLoading = {matchDataIsLoading} key={windowWidth} userMatches = {userMatches} player = {player} tag = {tag}/>
      </div>
 </div>
 

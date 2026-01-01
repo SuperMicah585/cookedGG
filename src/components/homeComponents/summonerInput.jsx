@@ -52,6 +52,14 @@ const SummonerInput = () => {
             <MenuItem value="NA">NA</MenuItem>
             <MenuItem value="EUW">EUW</MenuItem>
             <MenuItem value="KR">KR</MenuItem>
+            <MenuItem value="EUNE">EUNE</MenuItem>
+            <MenuItem value="JP">JP</MenuItem>
+            <MenuItem value="BR">BR</MenuItem>
+            <MenuItem value="LAN">LAN</MenuItem>
+            <MenuItem value="LAS">LAS</MenuItem>
+            <MenuItem value="TR">TR</MenuItem>
+            <MenuItem value="RU">RU</MenuItem>
+            <MenuItem value="OCE">OCE</MenuItem>
           </Select>
         </FormControl>
       </div> 
