@@ -1,7 +1,9 @@
+const baseURL = import.meta.env.VITE_API_BASE_URL;
+console.log(baseURL)
 export async function userValidation(name,tag,region){
     try {
     const response = await fetch(
-      `http://localhost:3000/api/player/${name}/${tag}/${region}`
+      `${baseURL}/api/player/${name}/${tag}/${region}`
     );
     if (!response.ok) {
       const error = await response.json();
@@ -21,7 +23,7 @@ export async function userValidation(name,tag,region){
 export async function getMatchData(puiid, region){
     try {
         const response = await fetch(
-      `http://localhost:3000/api/getmatches/forplayer/${puiid}/inregion/${region}`
+      `${baseURL}/api/getmatches/forplayer/${puiid}/inregion/${region}`
     );
       
     if (!response.ok) {
@@ -41,7 +43,7 @@ export async function getMatchData(puiid, region){
 export async function getUserMetaData(puuid, region){
     try {
         const response = await fetch(
-      `http://localhost:3000/api/getMetaDataFor/${puuid}/inregion/${region}`
+      `${baseURL}/api/getMetaDataFor/${puuid}/inregion/${region}`
     );
       
     if (!response.ok) {
@@ -58,7 +60,7 @@ export async function getUsers(quantity){
 
     try {
         const response = await fetch(
-      `http://localhost:3000/api/getusers/top/${quantity}`
+      `${baseURL}/api/getusers/top/${quantity}`
     );
       
     if (!response.ok) {
@@ -78,7 +80,7 @@ export async function getUserPosition(puuid){
 
     try {
         const response = await fetch(
-      `http://localhost:3000/api/users/${puuid}/rank`
+      `${baseURL}/api/users/${puuid}/rank`
     );
       
     if (!response.ok) {
@@ -96,7 +98,7 @@ export async function getUserPosition(puuid){
 
 export async function updateUser(userData) {
   try {
-    const response = await fetch('http://localhost:3000/api/updateUser', {
+    const response = await fetch(`${baseURL}/api/updateUser`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
