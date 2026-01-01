@@ -2,6 +2,9 @@ import React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { Bar } from 'react-chartjs-2';
+import {useEffect, useState} from 'react'
+import { getUsers } from '../../services/userData';
+import { useMutation } from '@tanstack/react-query'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -24,13 +27,63 @@ ChartJS.register(
 
 const LeaderBoardDistribution = () =>{
 
+    const [userDataForDistribution, setUserDataForDistribution] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0])
+
+    const userData = useMutation({
+    mutationFn: async (quantity) => {
+      return getUsers(quantity)
+    },
+    onSuccess: (data) => {
+    const bucketedData = [0, 0, 0, 0, 0, 0, 0, 0, 0]; // indices 0-8
+
+    for(const item of data.data){
+      const diff = item.elo_difference;
+      
+      if (diff <= -200) {
+        bucketedData[0]++;
+      } else if (diff < -150) {
+        bucketedData[1]++;
+      } else if (diff < -100) {
+        bucketedData[2]++;
+      } else if (diff < -50) {
+        bucketedData[3]++;
+      } else if (diff < 0) {
+        bucketedData[4]++;
+      } else if (diff < 50) {
+        bucketedData[5]++;
+      } else if (diff < 100) {
+        bucketedData[6]++;
+      } else if (diff < 150) {
+        bucketedData[7]++;
+      } else {
+        bucketedData[8]++;
+      }
+    }
+
+
+      setUserDataForDistribution(bucketedData)
+      
+    },
+    onError: (error) => {
+      setInputError(true)
+      setInputErrorMessage(error.message ?? "Validation failed")
+    },
+  })
+
+  useEffect(()=>{
+
+    userData.mutate(10000)
+
+
+},[])
+
 
   const data = {
     labels: ['-200+', '-150', '-100', '-50', '0', '50','100','150','200+'],
     datasets: [
       {
         label: 'number of summoners',
-        data: [2, 4, 8, 10, 15, 10,8,4,2],
+        data: userDataForDistribution,
         backgroundColor: 'rgba(59, 130, 246, 0.8)',
         borderColor: 'rgba(59, 130, 246, 1)',
         borderWidth: 1,

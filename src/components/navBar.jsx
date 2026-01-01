@@ -14,7 +14,7 @@ return(
             <Button onClick = {()=>navigate("/")} sx={{ fontSize: '1.25rem' /* text-xl */ }} color="inherit">
             <img className = 'h-12 w-12' src = {ItsCookedLogo} /> cookedGG</Button>
         <div className = 'ml-20'> 
-        <Button onClick = {()=>navigate("/leaderboard")} color="inherit">Leaderboard</Button>
+        <Button onClick = {()=>navigate("/everyone")} color="inherit">stuff</Button>
         </div>
       </Toolbar>
 

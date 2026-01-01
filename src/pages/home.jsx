@@ -23,7 +23,7 @@ function Home() {
       <div className='flex w-full h-1/4 md:h-1/3 lg:h-1/2 justify-center mt-10 md:mt-20 lg:mt-30 z-12'>
           <SummonerInput/>
       </div>
-      <div className = 'flex w-full p-5 sm:p-10 lg:p-20 justify-center z-12 mt-72'>
+      <div className = 'flex w-full p-5 sm:p-10 lg:p-20 justify-center z-12 mt-24'>
         <TopLosers/>
       </div>
 

@@ -14,13 +14,14 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { tierToPoints } from "../../functions/rank_calculations";
+import {getUserPosition} from "../../services/userData"
+import { useMutation } from '@tanstack/react-query'
 
-
-const CookedStatus = ({userMatches, playerName,userMetaDataObject}) =>{
+const CookedStatus = ({userMatches, playerName,userMetaDataObject,tableUpdateTrigger}) =>{
 const [anchorEl, setAnchorEl] = useState(null);
-const [cookedStatus,setCookedStatus] = useState('Very Cooked')
-const [userMetaData,setUserMetaData] = useState({wins:0,losses:0,tier:'',rank:'',leaguePoints:0})
+const [userMetaData,setUserMetaData] = useState({puuid: '', wins:0,losses:0,tier:'',rank:'',leaguePoints:0})
 const [dataForTable, setDataForTable] = useState([])
+const [userPositionData,setUserPositionData] = useState({eloDifference:0,position:0,percentile:0,totalUsers:0})
 
 useEffect(()=>{
 
@@ -37,6 +38,32 @@ const popUpMessage = () => {
         `this is your cooked mmr percentile and rank`
     )
 }
+
+
+
+  const userPosition = useMutation({
+    mutationFn: async () => {
+      return getUserPosition(userMetaData.puuid)
+    },
+    onSuccess: (data) => {
+      setUserPositionData({eloDifference:data.eloDifference,position:data.position,percentile:data.percentile,totalUsers:data.totalUsers})
+      
+    },
+    onError: (error) => {
+      setInputError(true)
+      setInputErrorMessage(error.message ?? "Validation failed")
+    },
+  })
+
+  useEffect(()=>{
+if(userMetaData.puuid !==''){
+    userPosition.mutate(userMetaData)
+}
+
+},[userMetaData,tableUpdateTrigger])
+
+
+
 
 
 useEffect(() => {
@@ -81,9 +108,10 @@ return(
     <Card elevation={3}>
       <CardContent>
 
-          <div className='flex-col justify-center items-center gap-2'> 
+          <div className='flex-col justify-center items-center gap-2 text-sm'> 
             <div className = 'font-bold text-2xl'>{playerName}</div>
-            <div>{userMetaData.tier} {userMetaData.rank} {userMetaData.leaguePoints} LP</div>
+            <div className = 'font-bold'>{userMetaData.tier} {userMetaData.rank} {userMetaData.leaguePoints} LP</div>
+            <div>{userPositionData.percentile}% | #{userPositionData.position}</div>
           </div>
  
 
@@ -99,7 +127,7 @@ return(
           <Typography sx={{ p: 2 }}>{popUpMessage()}</Typography>
         </Popover>
 
-        <div className = 'flex gap-5 items-center justify-center mt-2'> 
+        <div className = 'flex gap-5 items-center justify-center mt-2 text-sm'> 
         <div className = 'flex items-center justify-center whitespace-nowrap'>
         <div> <CheckCircleIcon color="success" /></div>
         <div>Wins: {userMetaData.wins}  </div>
@@ -118,7 +146,6 @@ return(
 
         <TableContainer component={Paper}>
       <Table>
-        <caption>Last updated on 12/20/2025</caption>
         <TableHead>
           <TableRow>
             <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Game</TableCell>

@@ -246,11 +246,12 @@ app.get('/api/getMetaDataFor/:puuid/inregion/:region', async (req, res) => {
 
 });
 
-app.get('/api/getworstmmr', async (req, res) => {
+app.get('/api/getusers/top/:quantity', async (req, res) => {
+  const {quantity} = req.params
   try {
     // Sort by elo_difference ascending and limit to top 10
     const result = await pool.query(
-      'SELECT * FROM users ORDER BY elo_difference DESC LIMIT 10'
+      `SELECT * FROM users ORDER BY elo_difference DESC LIMIT ${quantity}`
     );
 
     return res.json({
@@ -294,7 +295,7 @@ app.post('/api/updateUser', async (req, res) => {
       });
     }
 
-    // Insert or update (upsert) - if puiid exists, update it
+// Insert or update (upsert) - if puuid exists, update it
     const result = await pool.query(
       `INSERT INTO users (puuid, name, tag, region, tier, rank, leaguepoints, elo_difference, wins, losses)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
@@ -308,7 +309,8 @@ app.post('/api/updateUser', async (req, res) => {
          leaguepoints = EXCLUDED.leaguepoints,
          elo_difference = EXCLUDED.elo_difference,
          wins = EXCLUDED.wins,
-         losses = EXCLUDED.losses
+         losses = EXCLUDED.losses,
+         updated_at = CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles'
        RETURNING *`,
       [puuid, name, tag, region, tier, rank, leaguepoints, elo_difference, wins, losses]
     );
@@ -328,6 +330,56 @@ app.post('/api/updateUser', async (req, res) => {
       error: true,
       message: error.message
     });
+  }
+});
+
+
+app.get('/api/users/:puuid/rank', async (req, res) => {
+  try {
+    const { puuid } = req.params;
+
+    const result = await pool.query(
+      `WITH ranked_users AS (
+        SELECT 
+          puuid,
+          name,
+          tag,
+          elo_difference,
+          ROW_NUMBER() OVER (ORDER BY elo_difference DESC) as position,
+          COUNT(*) OVER () as total_users
+        FROM users
+      )
+      SELECT 
+        position,
+        total_users,
+        elo_difference,
+        name,
+        tag,
+        ROUND((position::numeric / total_users::numeric) * 100, 2) as percentile
+      FROM ranked_users
+      WHERE puuid = $1`,
+      [puuid]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const userData = result.rows[0];
+    
+    res.json({
+      puuid,
+      name: userData.name,
+      tag: userData.tag,
+      position: parseInt(userData.position),
+      totalUsers: parseInt(userData.total_users),
+      eloDifference: userData.elo_difference,
+      percentile: parseFloat(userData.percentile)
+    });
+
+  } catch (error) {
+    console.error('Error fetching user rank:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 

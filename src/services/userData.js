@@ -54,11 +54,31 @@ export async function getUserMetaData(puuid, region){
     throw error; 
   }
 }
-export async function getWorstTenMMR(){
+export async function getUsers(quantity){
 
     try {
         const response = await fetch(
-      `http://localhost:3000/api/getworstmmr`
+      `http://localhost:3000/api/getusers/top/${quantity}`
+    );
+      
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(`${error.message}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('fetch failed:', error.message);
+    throw error; 
+  }
+
+}
+
+
+export async function getUserPosition(puuid){
+
+    try {
+        const response = await fetch(
+      `http://localhost:3000/api/users/${puuid}/rank`
     );
       
     if (!response.ok) {

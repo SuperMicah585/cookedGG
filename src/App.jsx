@@ -15,7 +15,7 @@ function App() {
     
     <Route path="/" element={<Home />} />
     <Route path="/player/:player/:tag/:region" element={<UserDisplay />} />
-    <Route path="/Leaderboard" element={<Leaderboard />} />
+    <Route path="/everyone" element={<Leaderboard />} />
 
 
   </Routes>
