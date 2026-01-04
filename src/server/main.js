@@ -42,7 +42,7 @@ function detectDuoByRange(players) {
   const minDiffFromCore = Math.abs(min - coreMean);
   const maxDiffFromCore = Math.abs(max - coreMean);
   
-  const MMR_THRESHOLD = 100;
+  const MMR_THRESHOLD = 200;
   
   const hasLowOutlier = minDiffFromCore > MMR_THRESHOLD;
   const hasHighOutlier = maxDiffFromCore > MMR_THRESHOLD;
