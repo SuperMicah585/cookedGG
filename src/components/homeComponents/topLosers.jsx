@@ -121,7 +121,7 @@ const navigate = useNavigate();
             {lowestMmrUserData.tier} {lowestMmrUserData.rank}
           </TableCell>
           <TableCell> {lowestMmrUserData.leaguepoints} </TableCell>
-          <TableCell>{lowestMmrUserData.elo_difference}</TableCell>
+          <TableCell>{Number(lowestMmrUserData.elo_difference).toFixed(1)}</TableCell>
           <TableCell>{lowestMmrUserData.wins}</TableCell>
           <TableCell>{lowestMmrUserData.losses}</TableCell>
           <TableCell>{lowestMmrUserData.region}</TableCell>
@@ -129,7 +129,6 @@ const navigate = useNavigate();
                 {new Date(lowestMmrUserData.updated_at).toLocaleString('en-US', {
                   month: 'short',
                   day: 'numeric',
-                  year: 'numeric',
                   hour: 'numeric',
                   minute: '2-digit'
                 })}

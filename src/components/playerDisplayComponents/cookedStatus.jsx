@@ -17,6 +17,17 @@ import { tierToPoints } from "../../functions/rank_calculations";
 import {getUserPosition} from "../../services/userData"
 import { useMutation } from '@tanstack/react-query'
 import CircularProgress from '@mui/material/CircularProgress';
+import iron from '../../assets/iron.png'
+import bronze from '../../assets/bronze.png'
+import silver from '../../assets/silver.png'
+import gold from '../../assets/gold.png'
+import platinum from '../../assets/platinum.png'
+import diamond from '../../assets/diamond.png'
+import master from '../../assets/master.png'
+import grandmaster from '../../assets/grandmaster.png'
+import challenger from '../../assets/challenger.png'
+import emerald from '../../assets/emerald.png'
+import chonc from '../../assets/chonc.png'
 
 
 const CookedStatus = ({userMatches, playerName,userMetaDataObject,tableUpdateTrigger, matchDataIsLoading}) =>{
@@ -105,6 +116,20 @@ useEffect(() => {
   }
 }, [userMatches]);
 
+
+    const tierIcons = {
+      IRON: iron,
+      BRONZE: bronze,
+      SILVER: silver,
+      GOLD: gold,
+      PLATINUM: platinum,
+      EMERALD:emerald,
+      DIAMOND: diamond,
+      MASTER: master,
+      GRANDMASTER: grandmaster,
+      CHALLENGER: challenger
+    };
+
 return(
     <div className = 'flex flex-col gap-2 ml-2 mr-2 p-2 h-full w-full'> 
     <Card elevation={3}>
@@ -112,8 +137,13 @@ return(
 
           <div className='flex-col justify-center items-center gap-2 text-sm'> 
             <div className = 'font-bold text-2xl'>{playerName}</div>
-            <div className = 'font-bold'>{userMetaData.tier} {userMetaData.rank} {userMetaData.leaguePoints} LP</div>
-            <div>{userPositionData.percentile}% | #{userPositionData.position}</div>
+            <div className = ' flex font-bold items-center justify-center'>            
+              <img
+              src={tierIcons[userMetaData.tier]}
+              alt={`${userMetaData.tier} icon`}
+              style={{ width: 24, height: 24, marginRight: 8 }}
+            /> {userMetaData.tier} {userMetaData.rank} {userMetaData.leaguePoints} LP</div>
+            <div>Top {userPositionData.percentile}% | Rank #{userPositionData.position}</div>
           </div>
  
 

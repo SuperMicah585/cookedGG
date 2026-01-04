@@ -80,7 +80,7 @@ const navigate = useNavigate();
  }}>
   <div className = 'flex gap-2 items-center'> 
              <img src = {chonc} className = 'w-15 h-15 z-20 rounded-full'/>
-             <div className = 'text-white text-extrabold text-4xl'>10 Worst MMRs </div>
+             <div className = 'text-white text-extrabold text-4xl'>Worst MMR Leaderboard</div>
     </div>
     </TableCell>
 
@@ -124,7 +124,7 @@ const navigate = useNavigate();
             {lowestMmrUserData.tier} {lowestMmrUserData.rank}
           </TableCell>
           <TableCell> {lowestMmrUserData.leaguepoints} </TableCell>
-          <TableCell>{lowestMmrUserData.elo_difference}</TableCell>
+          <TableCell>{Number(lowestMmrUserData.elo_difference).toFixed(1)}</TableCell>
           <TableCell>{lowestMmrUserData.wins}</TableCell>
           <TableCell>{lowestMmrUserData.losses}</TableCell>
           <TableCell>{lowestMmrUserData.region}</TableCell>
