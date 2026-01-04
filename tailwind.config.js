@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       fontFamily: {
         bbhBartle: ['BBH Bartle', 'sans-serif'],
+        audiowide: ['Audiowide', 'sans-serif'],
       },
     },
   },
