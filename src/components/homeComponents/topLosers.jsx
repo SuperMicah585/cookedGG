@@ -9,6 +9,16 @@ import { useEffect,useState } from 'react';
 import { getUsers } from '../../services/userData';
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom';
+import iron from '../../assets/iron.png'
+import bronze from '../../assets/bronze.png'
+import silver from '../../assets/silver.png'
+import gold from '../../assets/gold.png'
+import platinum from '../../assets/platinum.png'
+import diamond from '../../assets/diamond.png'
+import master from '../../assets/master.png'
+import grandmaster from '../../assets/grandmaster.png'
+import challenger from '../../assets/challenger.png'
+import emerald from '../../assets/emerald.png'
 import chonc from '../../assets/chonc.png'
 
 
@@ -16,7 +26,18 @@ import chonc from '../../assets/chonc.png'
 
 function MyTable() {
 const navigate = useNavigate();
-
+    const tierIcons = {
+      IRON: iron,
+      BRONZE: bronze,
+      SILVER: silver,
+      GOLD: gold,
+      PLATINUM: platinum,
+      EMERALD:emerald,
+      DIAMOND: diamond,
+      MASTER: master,
+      GRANDMASTER: grandmaster,
+      CHALLENGER: challenger
+    };
 
   const [lowestMmrUserData,setUserData] = useState([])
 
@@ -52,7 +73,7 @@ const navigate = useNavigate();
     <caption>The most cooked...</caption>
     <TableHead>
         <TableRow>
-    <TableCell colSpan={8} sx={{ backgroundColor: "#27272A", textAlign: "center", padding: "16px",borderBottom: "none"  // Add this
+    <TableCell colSpan={9} sx={{ backgroundColor: "#27272A", textAlign: "center", padding: "16px",borderBottom: "none"  // Add this
  }}>
   <div className = 'flex gap-2 items-center'> 
              <img src = {chonc} className = 'w-15 h-15 z-20 rounded-full'/>
@@ -66,6 +87,7 @@ const navigate = useNavigate();
         <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Rank</TableCell>
         <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Player Name</TableCell>
         <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Tier</TableCell>
+        <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>LP</TableCell>
         <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>AVG Diffy</TableCell>
         <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Wins</TableCell>
         <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Losses</TableCell>
@@ -89,8 +111,16 @@ const navigate = useNavigate();
               {id+1}
             </div>
           </TableCell>
-          <TableCell>{lowestMmrUserData.name}#{lowestMmrUserData.tag}</TableCell>
-          <TableCell>{lowestMmrUserData.tier} {lowestMmrUserData.rank} {lowestMmrUserData.leaguepoints}LP</TableCell>
+          <TableCell>{lowestMmrUserData.name}<div className = 'text-gray-400'> #{lowestMmrUserData.tag} </div></TableCell>
+          <TableCell>
+            <img
+              src={tierIcons[lowestMmrUserData.tier]}
+              alt={`${lowestMmrUserData.tier} icon`}
+              style={{ width: 24, height: 24, marginRight: 8 }}
+            />
+            {lowestMmrUserData.tier} {lowestMmrUserData.rank}
+          </TableCell>
+          <TableCell> {lowestMmrUserData.leaguepoints} </TableCell>
           <TableCell>{lowestMmrUserData.elo_difference}</TableCell>
           <TableCell>{lowestMmrUserData.wins}</TableCell>
           <TableCell>{lowestMmrUserData.losses}</TableCell>

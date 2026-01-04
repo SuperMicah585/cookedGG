@@ -12,11 +12,35 @@ import { useMutation } from '@tanstack/react-query'
 import {useState,useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
 import chonc from '../../assets/chonc.png'
+import iron from '../../assets/iron.png'
+import bronze from '../../assets/bronze.png'
+import silver from '../../assets/silver.png'
+import gold from '../../assets/gold.png'
+import platinum from '../../assets/platinum.png'
+import diamond from '../../assets/diamond.png'
+import master from '../../assets/master.png'
+import grandmaster from '../../assets/grandmaster.png'
+import challenger from '../../assets/challenger.png'
+import emerald from '../../assets/emerald.png'
+
 const LeaderBoardTable = () =>{
 const navigate = useNavigate();
 
   const [lowestMmrUserData,setUserData] = useState([])
 
+
+      const tierIcons = {
+        IRON: iron,
+        BRONZE: bronze,
+        SILVER: silver,
+        GOLD: gold,
+        PLATINUM: platinum,
+        EMERALD:emerald,
+        DIAMOND: diamond,
+        MASTER: master,
+        GRANDMASTER: grandmaster,
+        CHALLENGER: challenger
+      };
 
 
 
@@ -47,25 +71,26 @@ const navigate = useNavigate();
     <div className = 'flex flex-col w-full gap-2 z-20'> 
             <Card elevation={3}>
       <CardContent>
-<TableContainer component={Paper} sx={{ maxHeight: 600 }}>
+
+<TableContainer component={Paper}>
   <Table>
-    <caption>We have arrived at the least cooked</caption>
     <TableHead>
         <TableRow>
-    <TableCell colSpan={8} sx={{ backgroundColor: "#27272A", textAlign: "center", padding: "16px",borderBottom: "none"  // Add this
+    <TableCell colSpan={9} sx={{ backgroundColor: "#27272A", textAlign: "center", padding: "16px",borderBottom: "none"  // Add this
  }}>
-           <div className = 'flex gap-2 items-center'> 
+  <div className = 'flex gap-2 items-center'> 
              <img src = {chonc} className = 'w-15 h-15 z-20 rounded-full'/>
-             <div className = 'text-white text-extrabold text-4xl'>Cooked Leaderboard </div>
-    </div> 
-
+             <div className = 'text-white text-extrabold text-4xl'>10 Worst MMRs </div>
+    </div>
     </TableCell>
 
+    
   </TableRow>
       <TableRow>
         <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Rank</TableCell>
         <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Player Name</TableCell>
         <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Tier</TableCell>
+        <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>LP</TableCell>
         <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>AVG Diffy</TableCell>
         <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Wins</TableCell>
         <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Losses</TableCell>
@@ -75,8 +100,9 @@ const navigate = useNavigate();
     </TableHead>
     <TableBody>
       {lowestMmrUserData.map((lowestMmrUserData,id) => (
-        <TableRow className = 'hover:cursor-pointer hover:bg-gray-100' onClick={() => navigate(`/player/${lowestMmrUserData.name}/${lowestMmrUserData.tag}/${lowestMmrUserData.region}`)} key={lowestMmrUserData.id}>
-          <TableCell>            <div 
+<TableRow className = 'hover:cursor-pointer hover:bg-gray-100' onClick={() => navigate(`/player/${lowestMmrUserData.name}/${lowestMmrUserData.tag}/${lowestMmrUserData.region}`)} key={lowestMmrUserData.id}>
+          <TableCell>
+            <div 
               className="w-8 h-8 rounded-full flex items-center justify-center font-bold"
               style={
                 id === 0 ? { backgroundColor: '#FFD700', color: '#000' } : 
@@ -86,9 +112,18 @@ const navigate = useNavigate();
               }
             >
               {id+1}
-            </div></TableCell>
-          <TableCell>{lowestMmrUserData.name}#{lowestMmrUserData.tag}</TableCell>
-          <TableCell>{lowestMmrUserData.tier} {lowestMmrUserData.rank} {lowestMmrUserData.leaguepoints}LP</TableCell>
+            </div>
+          </TableCell>
+          <TableCell>{lowestMmrUserData.name}<div className = 'text-gray-400'> #{lowestMmrUserData.tag} </div></TableCell>
+          <TableCell>
+            <img
+              src={tierIcons[lowestMmrUserData.tier]}
+              alt={`${lowestMmrUserData.tier} icon`}
+              style={{ width: 24, height: 24, marginRight: 8 }}
+            />
+            {lowestMmrUserData.tier} {lowestMmrUserData.rank}
+          </TableCell>
+          <TableCell> {lowestMmrUserData.leaguepoints} </TableCell>
           <TableCell>{lowestMmrUserData.elo_difference}</TableCell>
           <TableCell>{lowestMmrUserData.wins}</TableCell>
           <TableCell>{lowestMmrUserData.losses}</TableCell>
@@ -97,7 +132,6 @@ const navigate = useNavigate();
                 {new Date(lowestMmrUserData.updated_at).toLocaleString('en-US', {
                   month: 'short',
                   day: 'numeric',
-                  year: 'numeric',
                   hour: 'numeric',
                   minute: '2-digit'
                 })}
