@@ -6,6 +6,9 @@ import CookedStatus from '../components/playerDisplayComponents/cookedStatus';
 import {getMatchData,userValidation,getUserMetaData,updateUser} from '../services/userData.js'
 import { useMutation } from '@tanstack/react-query'
 import { tierToPoints } from '../functions/rank_calculations';
+import Alert from '@mui/material/Alert';
+
+
 function averageDifference(arr1, arr2) {
   if (arr1.length !== arr2.length) {
     throw new Error('Arrays must be the same length');
@@ -87,7 +90,6 @@ const updateUsertable = useMutation({
     return updateUser(userData)
   },
   onSuccess: (data) => {
-//nothing for now  
   setTableUpdateTrigger((prev)=>prev+1)
 
 
@@ -99,7 +101,7 @@ const updateUsertable = useMutation({
 })
 
   useEffect(()=>{
-    if(avgDifference!=0 && summoner.length>0 && userMetaDataObject.length>0){
+    if(avgDifference!=0 && summoner.length>0 && userMetaDataObject.length>0 && userMatches.length == 10){
 
     const userData = {
       puuid: summoner[0].puuid,
@@ -114,13 +116,11 @@ const updateUsertable = useMutation({
       losses: userMetaDataObject[0].losses
 
     };
-    console.log(userData)
-
       updateUsertable.mutate({userData})
     }
 
 
-  },[avgDifference,summoner])
+  },[avgDifference,summoner,userMatches])
 
 
   useEffect(() => {
@@ -155,6 +155,7 @@ const updateUsertable = useMutation({
 
   useEffect(() => {
   if (userMatches && userMatches.length > 0) {
+    console.log(userMatches)
     const myRiotId = player + '#' + tag;
     
     const flatMatches = userMatches.flat();
@@ -201,6 +202,7 @@ return(
       {validationMutation.isSuccess &&
     <div className = 'flex flex-col items-center relative w-full h-full bg-gray-50'>
       <NavBar/>
+      {userMatches.length<10 && matchDataIsLoading ==false && <Alert className = 'mt-5' severity="error">User does not have enough valid matches to be on the leaderboard</Alert>}
 <div className='flex flex-col lg:flex-row w-screen h-screen mt-5'>
     <div className = 'flex flex-col'> 
     <CookedStatus matchDataIsLoading = {matchDataIsLoading} tableUpdateTrigger = {tableUpdateTrigger} userMatches = {userMatches} userMetaDataObject = {userMetaDataObject} playerName = {`${player}#${tag}`}/>

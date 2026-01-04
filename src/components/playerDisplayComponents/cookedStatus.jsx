@@ -71,7 +71,7 @@ if(userMetaData.puuid !==''){
 useEffect(() => {
   if (userMatches && userMatches.length > 0) {
     const myRiotId = playerName;
-
+    console.log(userMatches)
     const dataForTable = []
     
     const flatMatches = userMatches.flat();
@@ -98,7 +98,7 @@ useEffect(() => {
       }
     });
     
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < playerPoints.length; i++) {
       dataForTable.push({playerPoints:playerPoints[i],lobbyAveragePoints:lobbyAveragePoints[i],difference: playerPoints[i]-lobbyAveragePoints[i]})
     }
     setDataForTable(dataForTable.reverse())

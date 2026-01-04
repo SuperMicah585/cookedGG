@@ -3,6 +3,7 @@ import LeaderBoardTable from '../components/leaderBoardComponents/leaderBoardTab
 import LeaderBoardDistribution from '../components/leaderBoardComponents/leaderBoardDistribution'
 import {useEffect,useState} from 'react'
 import TFTLeaderBoardBackGround from '../assets/tftLeaderBoard.png'
+import ScatterPlot from '../components/leaderBoardComponents/scatterPlot';
 const Leaderboard = () =>{
 
       const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -29,8 +30,9 @@ return(
   />
   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white pointer-events-none" />
 </div>
-<div className='flex flex-col items-center justify-center w-full max-w-7xl gap-2 mt-10 md:mt-64 lg:mt-96 p-2'>
+<div className='flex flex-col items-center justify-center w-full max-w-7xl gap-10 mt-10 md:mt-64 lg:mt-96 p-2'>
 <LeaderBoardDistribution key={windowWidth}/>
+<ScatterPlot key={windowWidth +1}/>
 <LeaderBoardTable/>
 </div>
 </div>

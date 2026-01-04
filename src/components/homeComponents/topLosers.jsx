@@ -49,7 +49,7 @@ const navigate = useNavigate();
 
 <TableContainer component={Paper}>
   <Table>
-    <caption>The best of the worst. Maximum cookediness</caption>
+    <caption>The most cooked...</caption>
     <TableHead>
         <TableRow>
     <TableCell colSpan={8} sx={{ backgroundColor: "#27272A", textAlign: "center", padding: "16px",borderBottom: "none"  // Add this
@@ -59,6 +59,8 @@ const navigate = useNavigate();
              <div className = 'text-white text-extrabold text-4xl'>10 Worst MMRs </div>
     </div>
     </TableCell>
+
+    
   </TableRow>
       <TableRow>
         <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Rank</TableCell>

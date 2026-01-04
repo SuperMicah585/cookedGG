@@ -28,14 +28,13 @@ ChartJS.register(
 const LeaderBoardDistribution = () =>{
 
     const [userDataForDistribution, setUserDataForDistribution] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0])
-
     const userData = useMutation({
     mutationFn: async (quantity) => {
       return getUsers(quantity)
     },
     onSuccess: (data) => {
     const bucketedData = [0, 0, 0, 0, 0, 0, 0, 0, 0]; // indices 0-8
-
+        console.log(data)
     for(const item of data.data){
       const diff = item.elo_difference;
       
@@ -79,10 +78,21 @@ const LeaderBoardDistribution = () =>{
 
 
   const data = {
-    labels: ['-200+', '-150', '-100', '-50', '0', '50','100','150','200+'],
+labels: [
+  "(-∞, -200]", 
+  "(-200, -150]", 
+  "(-150, -100]", 
+  "(-100, -50]", 
+  "(-50, 0]", 
+  "(0, 50]", 
+  "(50, 100]", 
+  "(100, 150]", 
+  "(150, 200]", 
+  "(200, ∞)"
+],
     datasets: [
       {
-        label: 'number of summoners',
+        label: 'Quantity of summoners',
         data: userDataForDistribution,
         backgroundColor: 'rgba(59, 130, 246, 0.8)',
         borderColor: 'rgba(59, 130, 246, 1)',
@@ -96,24 +106,28 @@ const LeaderBoardDistribution = () =>{
     plugins: {
       legend: {
         position: 'top',
+        display:false
       },
       title: {
         display: true,
-        text: 'Cooked Distribution',
+        text: 'AVG Difference of Players Compared to Lobby',
+          font: {
+            size: 20  
+          }
       },
     },
   scales: {
     x: {
       title: {
         display: true,
-        text: 'LP Difference'  // Your x-axis label here
+        text: 'LP Ranges'  // Your x-axis label here
       }
     },
     y: {
       beginAtZero: true,
       title: {
         display: true,
-        text: 'Number of Summoners'  // Optional y-axis label
+        text: 'Quantity of Players'  // Optional y-axis label
       }
     },
     },
