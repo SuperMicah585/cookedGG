@@ -83,8 +83,8 @@ const data = {
     {
       label: "lobby average",
       data: lobbyAverageRankPoints,
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.2)",
+      borderColor: '#27272A',
+      backgroundColor: '#65656dff',
       tension: 0.4,
     },
   ],

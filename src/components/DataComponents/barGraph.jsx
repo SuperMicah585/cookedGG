@@ -111,23 +111,32 @@ labels: [
       title: {
         display: true,
         text: 'AVG Difference of Players Compared to Lobby',
-          font: {
-            size: 20  
-          }
+        font: {
+          size: 24,
+          weight: 'bold'
+        },
       },
     },
   scales: {
     x: {
       title: {
         display: true,
-        text: 'LP Ranges'  // Your x-axis label here
+        text: 'LP Ranges',  // Your x-axis label here
+        font: {
+            size: 14,
+            weight: 'bold'
+          }
       }
     },
     y: {
       beginAtZero: true,
       title: {
         display: true,
-        text: 'Quantity of Players'  // Optional y-axis label
+        text: 'Quantity of Players',  // Optional y-axis label
+        font: {
+            size: 14,
+            weight: 'bold'
+          }
       }
     },
     },

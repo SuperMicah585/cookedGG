@@ -184,7 +184,7 @@ const ScatterPlot = () => {
   };
 
   return (
-    <div className="w-full z-20" style={{ height: '600px' }}>
+    <div className="w-full z-20 " style={{ height: '600px' }}>
       <Card elevation={3} style={{ height: '100%' }}>
         <CardContent style={{ height: '100%' }}>
           <Scatter data={data} options={options} />

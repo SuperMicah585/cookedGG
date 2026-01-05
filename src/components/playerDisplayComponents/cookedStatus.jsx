@@ -35,7 +35,6 @@ const [anchorEl, setAnchorEl] = useState(null);
 const [userMetaData,setUserMetaData] = useState({puuid: '', wins:0,losses:0,tier:'',rank:'',leaguePoints:0})
 const [dataForTable, setDataForTable] = useState([])
 const [userPositionData,setUserPositionData] = useState({eloDifference:0,position:0,percentile:0,totalUsers:0})
-
 useEffect(()=>{
 
 if(userMetaDataObject && userMetaDataObject.length>0){
@@ -131,21 +130,28 @@ useEffect(() => {
     };
 
 return(
-    <div className = 'flex flex-col gap-2 ml-2 mr-2 p-2 h-full w-full'> 
+    <div className = 'flex flex-col gap-2 ml-2 mr-2 h-full w-full'> 
+    
+    <div className = 'flex gap-2 items-center'> 
+      
+        <img className = 'w-20 h-20 rounded-full' src={userMetaData.iconId} alt="Summoner Icon" />
+      <div className = 'font-bold text-2xl font-bold'>{playerName}</div>
+    </div>
     <Card elevation={3}>
+      {!matchDataIsLoading &&
       <CardContent>
-
+    <div className = 'flex items-center justify-center p-2 w-full'> 
           <div className='flex-col justify-center items-center gap-2 text-sm'> 
-            <div className = 'font-bold text-2xl'>{playerName}</div>
+            
             <div className = ' flex font-bold items-center justify-center'>            
               <img
               src={tierIcons[userMetaData.tier]}
               alt={`${userMetaData.tier} icon`}
-              style={{ width: 24, height: 24, marginRight: 8 }}
+              style={{ width:65, height: 65, marginRight: 5 }}
             /> {userMetaData.tier} {userMetaData.rank} {userMetaData.leaguePoints} LP</div>
-            <div>Top {userPositionData.percentile}% | Rank #{userPositionData.position}</div>
+            <div className = 'text-gray-500 text-xs'>Top {userPositionData.percentile}% | Rank #{userPositionData.position}</div>
           </div>
- 
+ </div>
 
         <Popover
           open={open}
@@ -173,6 +179,7 @@ return(
         </div>
  </div>
       </CardContent>
+}
     </Card>
 
 {matchDataIsLoading? <Card elevation={3} ><div className = 'w-full h-96 flex items-center justify-center'> <CircularProgress size={20} /></div></Card>:

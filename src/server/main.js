@@ -194,9 +194,30 @@ async function getMatchData(gameId) {
   }
 }
 
+
+
 async function GetPlayerMetaData(routingRegion,puuid) {
   try {
     const url = `https://${routingRegion}.api.riotgames.com/tft/league/v1/by-puuid/${puuid}?api_key=${apiKey}`;
+    const summonerData = await getSummonerData(puuid,routingRegion)
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      const error = new Error(`Match data fetch error: ${response.status} ${response.statusText}`);
+      error.status = response.status;
+      throw error;
+    }
+
+    const data = await response.json();
+    return [{...data[0],iconId:`https://ddragon.leagueoflegends.com/cdn/15.24.1/img/profileicon/${summonerData.profileIconId}.png`}];
+  } catch (error) {
+    console.error(`Error fetching match data for game ${puuid}:`, error.message);
+    throw error; // propagate to caller
+  }
+}
+async function getSummonerData(puuid,routingRegion) {
+  try {
+    const url = `https://${routingRegion}.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/${puuid}?api_key=${apiKey}`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -212,7 +233,6 @@ async function GetPlayerMetaData(routingRegion,puuid) {
     throw error; // propagate to caller
   }
 }
-
 
 
 
@@ -270,7 +290,7 @@ app.get('/api/getmatches/forplayer/:puuid/inregion/:region', async (req, res) =>
       
     }
 
-    console.log(matchData)
+
     
     res.json({ matchData});
 
