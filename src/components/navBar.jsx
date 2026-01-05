@@ -17,10 +17,10 @@ return(
             <Button onClick = {()=>{navigate("/");setActivePage('home')}} sx={{ fontSize: '1.25rem'}} color="inherit">
             <img className = 'h-12 w-12' src = {ItsCookedLogo} /> cookedGG</Button>
         <div className = 'ml-12'> 
-        <Button color="inherit"  onClick = {()=>{navigate("/Data");setActivePage('data')}}>Data</Button>
+        <Button color="inherit"  onClick = {()=>{navigate("/data");setActivePage('data')}}>Data</Button>
         </div>
                 <div className = 'ml-12'> 
-        <Button onClick = {()=>{navigate("/Leaderboard");setActivePage('leaderboard')}} color="inherit">LeaderBoard</Button>
+        <Button onClick = {()=>{navigate("/leaderboard");setActivePage('leaderboard')}} color="inherit">LeaderBoard</Button>
         </div>
       </Toolbar>
 

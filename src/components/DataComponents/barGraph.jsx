@@ -94,8 +94,8 @@ labels: [
       {
         label: 'Quantity of summoners',
         data: userDataForDistribution,
-        backgroundColor: 'rgba(59, 130, 246, 0.8)',
-        borderColor: 'rgba(59, 130, 246, 1)',
+        backgroundColor: '#27272A',
+        borderColor: '#27272A',
         borderWidth: 1,
       },
     ],
