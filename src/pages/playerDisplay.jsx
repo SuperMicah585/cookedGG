@@ -32,6 +32,7 @@ const UserDisplay = () =>{
   const [userMatches,setUserMatches] = useState([])
   const { player,tag,region } = useParams();
   const [avgDifference, setAvgDifference] = useState(0)
+  const [eloDiff, setEloDiff] = useState(0)
   const [tableUpdateTrigger, setTableUpdateTrigger] = useState(0)
  
 const validationMutation = useMutation({
@@ -155,7 +156,6 @@ const updateUsertable = useMutation({
 
   useEffect(() => {
   if (userMatches && userMatches.length > 0) {
-    console.log(userMatches)
     const myRiotId = player + '#' + tag;
     
     const flatMatches = userMatches.flat();
@@ -183,12 +183,24 @@ const updateUsertable = useMutation({
         lobbyAveragePoints.push(Math.round(avgPoints));
       }
     });
-    
+
+    const userPoints = [];
+    userMatches.forEach(match => {
+      const ranks = match
+        .filter(item => item.riot_id?.toLowerCase() == myRiotId?.toLowerCase()) // Exclude player
+        .map(item => item.ranked?.rating_text)
+        .filter(rank => rank); // Remove undefined/null
+      
+      if (ranks.length > 0) {
+        const points = ranks.map(tierToPoints);
+        userPoints.push(points)
+      }
+    });
+    setEloDiff(userPoints[0][0]-userPoints[userPoints.length-1][0])
     setAvgDifference(averageDifference(playerPoints,lobbyAveragePoints))
 
   }
 }, [userMatches]);
-
 
 
 
@@ -210,7 +222,8 @@ return(
     
     <div className = 'flex flex-col gap-2 w-full pl-2 pr-2 sm:pl-10 sm:pr-10 lg:pl-20 lg:pr-20'> 
       <div className = 'flex gap-2 lg:mt-0 mt-2 max-h-32 items-center justify-center gap-5'> 
-      {!matchDataIsLoading && <GenericTile dataColor = {'text-black'} data = {avgDifference.toFixed(2)} description = {"Average Elo Difference"} descriptionColor = {avgDifference>=0?'text-red-500':'text-green-500'} />}
+      {!matchDataIsLoading && <GenericTile dataColor = {'text-black'} data = {avgDifference.toFixed(2)} description = {"Average LP Difference"} descriptionColor = {avgDifference>=0?'text-red-500':'text-green-500'} />}
+      {!matchDataIsLoading && <GenericTile dataColor = {'text-black'} data = {eloDiff>=0? '+' + eloDiff.toFixed(2): eloDiff.toFixed(2)} description = {"LP Last 10 Games"} descriptionColor = {eloDiff<=0?'text-red-500':'text-green-500'} />}
       </div>
      <div className = 'flex justify-center w-full'> < PlayerAverageGraph matchDataIsLoading = {matchDataIsLoading} key={windowWidth} userMatches = {userMatches} player = {player} tag = {tag}/> </div>
      </div>

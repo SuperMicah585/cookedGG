@@ -23,7 +23,7 @@ const apiKey = process.env.riotApiKey;
 //Get list of matches from /lol/match/v5/matches/by-puuid/{puuid}/ids
 //Pull last 10 matches from https://metatft-matches-2.ams3.digitaloceanspaces.com/NA1_5449502245.json
 
-
+/** 
 function detectDuoByRange(players) {
 
   try {
@@ -73,7 +73,7 @@ return false
 
 }
 }
-
+*/
 //API Endpoint /riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine} to get PUIDD
 async function getRiotPuuiD(region, name, tag) {
   try {
@@ -145,7 +145,7 @@ function getRegion(routingRegion) {
   return region
 }
 
-async function getMatches(puuid, region, count = 20) {
+async function getMatches(puuid, region, count = 10) {
   try {
     const url = `https://${region}.api.riotgames.com/tft/match/v1/matches/by-puuid/${puuid}/ids?start=0&count=${count}&api_key=${apiKey}`;
     const response = await fetch(url);
@@ -181,16 +181,10 @@ async function getMatchData(gameId) {
     const data = await response.json();
     
     const players = data._metatft.participant_info
-    const detectDuo = detectDuoByRange(players)
-    if(detectDuo){
-    return {players: players, isDuo: detectDuo.isSuspiciousDuo};
-    }
-    else{
+    return players
 
-      return {players: players, isDuo: true};
-    }
   } catch (error) {
-    return {players: [], isDuo: true};
+    return error;
   }
 }
 
@@ -272,26 +266,15 @@ app.get('/api/player/:username/:tag/:region', async (req, res) => {
 app.get('/api/getmatches/forplayer/:puuid/inregion/:region', async (req, res) => {
   const { puuid,region } = req.params;
   try {
-    var counter = 0;
 
     const matchData = []
     const riotRegion = getRegion(region)
     const matches = await getMatches(puuid,riotRegion)
-    while (matchData.length<10 && counter<40){
-      
-      const data = await getMatchData(matches[counter])
-      if(!data?.isDuo){
-      matchData.push(data.players)
-     
-       
-      }
-
-      counter+=1
+    for(const match of matches){
+      const dataFromMetaTft = await getMatchData(match)
+      matchData.push(dataFromMetaTft)
       
     }
-
-
-    
     res.json({ matchData});
 
 
