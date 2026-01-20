@@ -33,10 +33,10 @@ const LeaderBoardDistribution = () =>{
       return getUsers(quantity)
     },
     onSuccess: (data) => {
-    const bucketedData = [0, 0, 0, 0, 0, 0, 0, 0, 0]; // indices 0-8
-        console.log(data)
+    const bucketedData = [0, 0, 0, 0, 0, 0, 0, 0, 0,0]; // indices 0-8
     for(const item of data.data){
-      const diff = item.elo_difference;
+      const diff = Number(item.elo_difference);
+      
       
       if (diff <= -200) {
         bucketedData[0]++;
@@ -54,8 +54,11 @@ const LeaderBoardDistribution = () =>{
         bucketedData[6]++;
       } else if (diff < 150) {
         bucketedData[7]++;
-      } else {
+      } else if (diff < 200) {
         bucketedData[8]++;
+      }
+      else{
+        bucketedData[9]++;
       }
     }
 

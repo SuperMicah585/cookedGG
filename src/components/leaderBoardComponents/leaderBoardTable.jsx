@@ -80,7 +80,7 @@ const navigate = useNavigate();
  }}>
   <div className = 'flex gap-2 items-center'> 
              <img src = {chonc} className = 'w-15 h-15 z-20 rounded-full'/>
-             <div className = 'text-white text-extrabold text-4xl'>Worst MMR Leaderboard</div>
+             <div className = 'text-white text-extrabold text-4xl'>Players Ordered by Elo Difference</div>
     </div>
     </TableCell>
 

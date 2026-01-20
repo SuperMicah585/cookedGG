@@ -81,10 +81,10 @@ if(userMetaData.puuid !==''){
 useEffect(() => {
   if (userMatches && userMatches.length > 0) {
     const myRiotId = playerName;
-    console.log(userMatches)
+
     const dataForTable = []
     
-    const flatMatches = userMatches.flat();
+    const flatMatches = userMatches.map(item=>item.players).flat();
     
     // Get player rank points directly
     const playerPoints = flatMatches
@@ -96,7 +96,7 @@ useEffect(() => {
     // Calculate lobby average rank points (excluding the player)
     const lobbyAveragePoints = [];
     userMatches.forEach(match => {
-      const ranks = match
+      const ranks = match.players
         .filter(item => item.riot_id?.toLowerCase() !== myRiotId?.toLowerCase()) // Exclude player
         .map(item => item.ranked?.rating_text)
         .filter(rank => rank); // Remove undefined/null

@@ -34,7 +34,7 @@ const UserDisplay = () =>{
   const [avgDifference, setAvgDifference] = useState(0)
   const [eloDiff, setEloDiff] = useState(0)
   const [tableUpdateTrigger, setTableUpdateTrigger] = useState(0)
- 
+ console.log(userMatches)
 const validationMutation = useMutation({
   mutationFn: async ({ player, tag, region }) => {
     return userValidation(player, tag, region)
@@ -57,6 +57,7 @@ const userMatchData = useMutation({
   },
   onSuccess: (data) => {
     const { matchData } = data
+    console.log(matchData)
     setUserMatches(matchData)
 
     
@@ -69,7 +70,7 @@ const userMatchData = useMutation({
 
 const matchDataIsLoading = userMatchData.isPending 
 
-
+console.log(userMatches)
 const userMetaData = useMutation({
   mutationFn: async ({ summoner,region }) => {
     return getUserMetaData(summoner[0].puuid, region)
@@ -153,13 +154,11 @@ const updateUsertable = useMutation({
   }, [summoner,region]);
 
 
-
   useEffect(() => {
   if (userMatches && userMatches.length > 0) {
     const myRiotId = player + '#' + tag;
     
-    const flatMatches = userMatches.flat();
-    
+    const flatMatches = userMatches.map(item=>item.players).flat();
     // Get player rank points directly
     const playerPoints = flatMatches
       .filter((item) => item.riot_id?.toLowerCase() === myRiotId?.toLowerCase())
@@ -172,7 +171,7 @@ const updateUsertable = useMutation({
     // Calculate lobby average rank points (excluding the player)
     const lobbyAveragePoints = [];
     userMatches.forEach(match => {
-      const ranks = match
+      const ranks = match.players
         .filter(item => item.riot_id?.toLowerCase() !== myRiotId?.toLowerCase()) // Exclude player
         .map(item => item.ranked?.rating_text)
         .filter(rank => rank); // Remove undefined/null
@@ -186,7 +185,7 @@ const updateUsertable = useMutation({
 
     const userPoints = [];
     userMatches.forEach(match => {
-      const ranks = match
+      const ranks = match.players
         .filter(item => item.riot_id?.toLowerCase() == myRiotId?.toLowerCase()) // Exclude player
         .map(item => item.ranked?.rating_text)
         .filter(rank => rank); // Remove undefined/null
@@ -201,7 +200,6 @@ const updateUsertable = useMutation({
 
   }
 }, [userMatches]);
-
 
 
 return(

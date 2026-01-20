@@ -145,7 +145,7 @@ function getRegion(routingRegion) {
   return region
 }
 
-async function getMatches(puuid, region, count = 10) {
+async function getMatches(puuid, region, count = 20) {
   try {
     const url = `https://${region}.api.riotgames.com/tft/match/v1/matches/by-puuid/${puuid}/ids?start=0&count=${count}&api_key=${apiKey}`;
     const response = await fetch(url);
@@ -177,10 +177,9 @@ async function getMatchData(gameId) {
       error.status = response.status;
       throw error;
     }
-    
-    const data = await response.json();
-    
-    const players = data._metatft.participant_info
+    const json = await response.json();
+
+    const players = {queueId: json.info.queueId, players: json._metatft.participant_info, dateTime: json.info.game_datetime}
     return players
 
   } catch (error) {
@@ -267,14 +266,18 @@ app.get('/api/getmatches/forplayer/:puuid/inregion/:region', async (req, res) =>
   const { puuid,region } = req.params;
   try {
 
-    const matchData = []
+    const data = []
     const riotRegion = getRegion(region)
     const matches = await getMatches(puuid,riotRegion)
     for(const match of matches){
       const dataFromMetaTft = await getMatchData(match)
-      matchData.push(dataFromMetaTft)
+      data.push(dataFromMetaTft)
       
     }
+    const matchData = data.filter(item =>
+      item.queueId === 1100
+    ).slice(0, 10);
+
     res.json({ matchData});
 
 
