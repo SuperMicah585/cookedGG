@@ -18,7 +18,7 @@ const Leaderboard = () =>{
       }, []);
 
 return(
-<div className="fixed inset-0 w-screen h-screen">
+<div className="fixed inset-0 w-screen h-screen bg-white">
   {/* Background image - positioned absolutely */}
   <div className="absolute top-0 left-0 h-1/4 md:h-1/2 lg:h-3/4 w-full z-0">
     <img 

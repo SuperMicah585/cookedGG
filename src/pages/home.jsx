@@ -6,7 +6,7 @@ import Background from '../assets/TFTSet16Background.png'
 function Home() {
 
   return (
-<div className ='absolute left-0 top-0 w-screen h-screen'>
+<div className ='absolute left-0 top-0 w-screen h-screen bg-white'>
     <div className = 'flex flex-col relative w-full h-full bg-gray-50 overflow-y-scroll'>
     <div className = 'w-full z-12'>
       <NavBar/>

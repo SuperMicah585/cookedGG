@@ -202,7 +202,7 @@ const updateUsertable = useMutation({
 return(
 
   
-<div className ='absolute left-0 top-0 w-screen h-screen'>
+<div className ='absolute left-0 top-0 w-screen h-screen bg-white'>
         {validationMutation.isError && (
         <p className='flex w-full h-full items-center justify-center'>Cannot find a TFT player with that name.</p>
       )}
