@@ -184,13 +184,13 @@ const ScatterPlot = () => {
   };
 
   return (
-    <div className="w-full z-20 " style={{ height: '600px' }}>
-      <Card elevation={3} style={{ height: '100%' }}>
-        <CardContent style={{ height: '100%' }}>
-          <Scatter data={data} options={options} />
-        </CardContent>
-      </Card>
-    </div>
+<div className="w-full h-full z-20">
+  <Card elevation={3} sx={{ height: '100%' }}>
+    <CardContent sx={{ height: '100%', padding: 2 }}>
+      <Scatter data={data} options={options} />
+    </CardContent>
+  </Card>
+</div>
   );
 };
 

@@ -18,25 +18,35 @@ const Leaderboard = () =>{
       }, []);
 
 return(
-<div className ='absolute left-0 top-0 w-screen h-screen'>
+<div className="fixed inset-0 w-screen h-screen">
+  {/* Background image - positioned absolutely */}
+  <div className="absolute top-0 left-0 h-1/4 md:h-1/2 lg:h-3/4 w-full z-0">
+    <img 
+      className="opacity-75 h-full w-full object-cover" 
+      src={TFTLeaderBoardBackGround} 
+      alt="background"
+    />
+    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50 pointer-events-none" />
+  </div>
 
-    <div className = 'flex flex-col relative w-full h-full overflow-y-scroll bg-gray-50 gap-2 items-center'>
-      <NavBar/>
-<div className="absolute top-0 left-0 h-1/4 md:h-1/2 lg:h-3/4 w-full">
-  <img 
-    className="opacity-75 h-full w-full" 
-    src={TFTLeaderBoardBackGround} 
-    alt="background"
-  />
-  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white pointer-events-none" />
-</div>
-<div className='flex flex-col items-center justify-center w-full max-w-7xl gap-10 mt-10 md:mt-32 lg:mt-64 p-2'>
-<LeaderBoardDistribution key={windowWidth}/>
-<ScatterPlot key={windowWidth +1}/>
-<LeaderBoardTable/>
-</div>
-</div>
-
+  {/* Scrollable content */}
+  <div className="absolute inset-0 overflow-y-auto z-10">
+    <div className="flex flex-col items-center gap-2">
+      <NavBar />
+      
+      <div className="flex flex-col items-center w-full max-w-7xl gap-10 mt-10 md:mt-32 lg:mt-64 p-2 pb-20">
+        <div className="w-full h-96 lg:h-[700px]">
+          <LeaderBoardDistribution key={windowWidth} />
+        </div>
+        <div className="w-full h-96 lg:h-[700px]">
+          <ScatterPlot key={`scatter-${windowWidth}`} />
+        </div>
+        <div className="w-full">
+          <LeaderBoardTable />
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 )
 

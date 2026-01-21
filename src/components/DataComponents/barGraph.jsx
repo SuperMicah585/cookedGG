@@ -106,6 +106,7 @@ labels: [
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'top',
@@ -146,12 +147,12 @@ labels: [
   };
 
   return (
-    <div className="w-full z-20">
-            <Card elevation={3}>
-      <CardContent>
+<div className="w-full h-full z-20">
+  <Card elevation={3} sx={{ height: '100%' }}>
+    <CardContent sx={{ height: '100%', padding: 2 }}>
       <Bar data={data} options={options} />
-      </CardContent>
-      </Card>
-    </div>
+    </CardContent>
+  </Card>
+</div>
   );
 }; export default LeaderBoardDistribution;
