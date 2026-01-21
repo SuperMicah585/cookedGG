@@ -28,7 +28,7 @@ return(
   />
   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white pointer-events-none" />
 </div>
-<div className='flex flex-col items-center justify-center w-full max-w-7xl gap-10 mt-10 md:mt-64 lg:mt-96 p-2'>
+<div className='flex flex-col items-center justify-center w-full max-w-7xl gap-10 mt-10 md:mt-32 lg:mt-64 p-2'>
 <LeaderBoardTable/>
 </div>
 </div>

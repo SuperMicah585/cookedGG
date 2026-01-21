@@ -120,32 +120,65 @@ async function getRoutingRegion(region,puuid) {
 }
 
 
-function getRegion(routingRegion) {
-  // Replace digits so “NA1” becomes “NA”
-  const result = routingRegion.replace(/\d+/g, '')
+function getRegionMatch(routingRegion) {
   
-  const routingRelationship = {
-    na: "AMERICAS",
-    br: "AMERICAS",
-    lan: "AMERICAS",
-    las: "AMERICAS",
-    oce: "AMERICAS",
-    kr: "ASIA",
-    jp: "ASIA",
-    eune: "EUROPE",
-    euw: "EUROPE",
-    tr: "EUROPE",
-    ru: "EUROPE"
-  }
+    const routingRelationship = {
+      na: "AMERICAS",      // North America
+      br: "AMERICAS",      // Brazil
+      lan: "AMERICAS",     // Latin America North
+      las: "AMERICAS",     // Latin America South
+      kr: "ASIA",          // Korea
+      jp: "ASIA",          // Japan
+      eune: "EUROPE",       // EU Nordic & East
+      euw: "EUROPE",        // EU West
+      tr: "EUROPE",         // Turkey
+      me1: "EUROPE",        // Middle East (served under Europe region)
+      ru: "EUROPE",         // Russia
+      oce: "SEA",          // Oceania
+      sg2: "SEA",          // Singapore / SEA shard
+      tw2: "SEA",          // Taiwan
+      vn2: "SEA"           // Vietnam
+    };
 
   // Use bracket notation to access object by variable key
-  const region = routingRelationship[result.toLowerCase()]
+  const region = routingRelationship[routingRegion.toLowerCase()]
 
   // Return the mapped region, or undefined if not found
   return region
 }
 
-async function getMatches(puuid, region, count = 20) {
+
+
+function getRegionAccount(routingRegion) {
+
+  
+    const routingRelationship = {
+      na: "AMERICAS",      // North America
+      br: "AMERICAS",      // Brazil
+      lan: "AMERICAS",     // Latin America North
+      las: "AMERICAS",     // Latin America South
+      kr: "ASIA",          // Korea
+      jp: "ASIA",          // Japan
+      eune: "EUROPE",       // EU Nordic & East
+      euw: "EUROPE",        // EU West
+      tr: "EUROPE",         // Turkey
+      me1: "EUROPE",        // Middle East (served under Europe region)
+      ru: "EUROPE",         // Russia
+      oce: "ASIA",          // Oceania
+      sg2: "ASIA",          // Singapore / SEA shard
+      tw2: "ASIA",          // Taiwan
+      vn2: "ASIA"           // Vietnam
+    };
+
+  // Use bracket notation to access object by variable key
+  const region = routingRelationship[routingRegion.toLowerCase()]
+
+  // Return the mapped region, or undefined if not found
+  return region
+}
+
+
+async function getMatches(puuid, region, count = 50) {
   try {
     const url = `https://${region}.api.riotgames.com/tft/match/v1/matches/by-puuid/${puuid}/ids?start=0&count=${count}&api_key=${apiKey}`;
     const response = await fetch(url);
@@ -241,9 +274,8 @@ app.get('/api/player/:username/:tag/:region', async (req, res) => {
   const { username, tag, region } = req.params;
   try {
 
-    const riotRegion = getRegion(region)
+    const riotRegion = getRegionAccount(region)
     const summoner = await getRiotPuuiD(riotRegion, username, tag)
-
     res.json({ summoner});
 
 
@@ -265,22 +297,25 @@ app.get('/api/player/:username/:tag/:region', async (req, res) => {
 app.get('/api/getmatches/forplayer/:puuid/inregion/:region', async (req, res) => {
   const { puuid,region } = req.params;
   try {
-
-    const data = []
-    const riotRegion = getRegion(region)
+    var count = 0
+    const matchData = []
+    const riotRegion = getRegionMatch(region)
     const matches = await getMatches(puuid,riotRegion)
-    for(const match of matches){
-      const dataFromMetaTft = await getMatchData(match)
-      data.push(dataFromMetaTft)
-      
-    }
-    const matchData = data.filter(item =>
-      item.queueId === 1100
-    ).slice(0, 10);
+    while(matchData.length<10 && count<50) {
+  
+      const dataFromMetaTft = await getMatchData(matches[count])
+
+      if(dataFromMetaTft.queueId ==1100){
+        matchData.push(dataFromMetaTft)
+      }
+
+      count+=1
+  }
+
 
     res.json({ matchData});
 
-
+  
   } catch (error) {
     
     console.error(error);
@@ -299,7 +334,7 @@ app.get('/api/getMetaDataFor/:puuid/inregion/:region', async (req, res) => {
   const { puuid,region } = req.params;
   
   try {
-    const riotRegion = getRegion(region)
+    const riotRegion = getRegionAccount(region)
     const RoutingData = await getRoutingRegion(riotRegion,puuid)
 
     const routingRegion = RoutingData.region

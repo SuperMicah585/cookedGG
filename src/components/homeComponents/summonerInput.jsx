@@ -49,17 +49,22 @@ const SummonerInput = () => {
               },
             }}
           >
-            <MenuItem value="NA">NA</MenuItem>
-            <MenuItem value="EUW">EUW</MenuItem>
-            <MenuItem value="KR">KR</MenuItem>
-            <MenuItem value="EUNE">EUNE</MenuItem>
-            <MenuItem value="JP">JP</MenuItem>
-            <MenuItem value="BR">BR</MenuItem>
-            <MenuItem value="LAN">LAN</MenuItem>
-            <MenuItem value="LAS">LAS</MenuItem>
-            <MenuItem value="TR">TR</MenuItem>
-            <MenuItem value="RU">RU</MenuItem>
-            <MenuItem value="OCE">OCE</MenuItem>
+        <MenuItem value="NA">NA</MenuItem>
+        <MenuItem value="BR">BR</MenuItem>
+        <MenuItem value="LAN">LAN</MenuItem>
+        <MenuItem value="LAS">LAS</MenuItem>
+        <MenuItem value="KR">KR</MenuItem>
+        <MenuItem value="JP">JP</MenuItem>
+        <MenuItem value="EUNE">EUNE</MenuItem>
+        <MenuItem value="EUW">EUW</MenuItem>
+        <MenuItem value="TR">TR</MenuItem>
+        <MenuItem value="ME1">ME1</MenuItem>
+        <MenuItem value="RU">RU</MenuItem>
+        <MenuItem value="OCE">OCE</MenuItem>
+        <MenuItem value="SG2">SG2</MenuItem>
+        <MenuItem value="TW2">TW2</MenuItem>
+        <MenuItem value="VN2">VN2</MenuItem>
+
           </Select>
         </FormControl>
       </div> 
