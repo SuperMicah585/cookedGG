@@ -202,12 +202,12 @@ const updateUsertable = useMutation({
 return(
 
   
-<div className ='absolute left-0 top-0 w-screen h-full bg-white'>
+<div className ='absolute left-0 top-0 w-screen h-full'>
         {validationMutation.isError && (
         <p className='flex w-full h-full items-center justify-center'>Cannot find a TFT player with that name.</p>
       )}
       {validationMutation.isSuccess &&
-    <div className = 'flex flex-col items-center relative w-full h-full bg-gray-50'>
+    <div className = 'flex flex-col items-center relative w-full h-full bg-gray-50 overflow-y-scroll'>
       <NavBar/>
       {userMatches.length<10 && matchDataIsLoading ==false && <Alert className = 'mt-5' severity="error">User does not have enough valid matches to be on the leaderboard</Alert>}
 <div className='flex flex-col lg:flex-row w-screen h-screen mt-5'>

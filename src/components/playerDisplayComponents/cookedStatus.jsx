@@ -135,7 +135,7 @@ return(
     <div className = 'flex gap-2 items-center'> 
       
         <img className = 'w-20 h-20 rounded-full' src={userMetaData.iconId} alt="Summoner Icon" />
-      <div className = 'font-bold text-2xl font-bold'>{playerName}</div>
+      <div className = 'font-bold text-2xl font-bold text-black'>{playerName}</div>
     </div>
     <Card elevation={3}>
       {!matchDataIsLoading &&
