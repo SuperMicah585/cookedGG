@@ -19,9 +19,6 @@ return(
         <div className = 'ml-12'> 
         <Button color="inherit"  onClick = {()=>{navigate("/data");setActivePage('data')}}>Data</Button>
         </div>
-                <div className = 'ml-12'> 
-        <Button onClick = {()=>{navigate("/leaderboard");setActivePage('leaderboard')}} color="inherit">LeaderBoard</Button>
-        </div>
       </Toolbar>
 
     </AppBar>

@@ -3,6 +3,7 @@ import LeaderBoardDistribution from '../components/DataComponents/barGraph'
 import {useEffect,useState} from 'react'
 import TFTLeaderBoardBackGround from '../assets/tftLeaderBoard.png'
 import ScatterPlot from '../components/DataComponents/scatterPlot';
+import LeaderBoardTable from '../components/leaderBoardComponents/leaderBoardTable';
 const Leaderboard = () =>{
 
       const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -32,6 +33,7 @@ return(
 <div className='flex flex-col items-center justify-center w-full max-w-7xl gap-10 mt-10 md:mt-32 lg:mt-64 p-2'>
 <LeaderBoardDistribution key={windowWidth}/>
 <ScatterPlot key={windowWidth +1}/>
+<LeaderBoardTable/>
 </div>
 </div>
 
