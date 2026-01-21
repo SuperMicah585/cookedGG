@@ -202,7 +202,7 @@ const updateUsertable = useMutation({
 return(
 
   
-<div className ='absolute left-0 top-0 w-screen h-screen bg-white'>
+<div className ='absolute left-0 top-0 w-screen h-full bg-white'>
         {validationMutation.isError && (
         <p className='flex w-full h-full items-center justify-center'>Cannot find a TFT player with that name.</p>
       )}
@@ -216,11 +216,11 @@ return(
     </div>
     
     <div className = 'flex flex-col gap-2 w-full pl-2 pr-2 sm:pl-10 sm:pr-10 lg:pl-20 lg:pr-20'> 
-      <div className = 'flex gap-2 lg:mt-0 mt-2 max-h-32 items-center justify-center gap-5'> 
+      <div className = 'flex gap-1 lg:mt-0 mt-2 max-h-32 items-center justify-center lg:gap-5'> 
       {!matchDataIsLoading && <GenericTile dataColor = {'text-black'} data = {avgDifference.toFixed(2)} description = {"Average LP Difference"} descriptionColor = {avgDifference>=0?'text-red-500':'text-green-500'} />}
       {!matchDataIsLoading && <GenericTile dataColor = {'text-black'} data = {eloDiff>=0? '+' + eloDiff.toFixed(2): eloDiff.toFixed(2)} description = {"LP Last 10 Games"} descriptionColor = {eloDiff<=0?'text-red-500':'text-green-500'} />}
       </div>
-     <div className = 'flex justify-center w-full'> < PlayerAverageGraph matchDataIsLoading = {matchDataIsLoading} key={windowWidth} userMatches = {userMatches} player = {player} tag = {tag}/> </div>
+     <div className="w-full h-96 lg:h-[700px]">< PlayerAverageGraph matchDataIsLoading = {matchDataIsLoading} key={windowWidth} userMatches = {userMatches} player = {player} tag = {tag}/> </div>
      </div>
 
 </div>

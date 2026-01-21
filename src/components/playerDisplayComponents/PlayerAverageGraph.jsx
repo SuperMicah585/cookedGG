@@ -92,7 +92,7 @@ const data = {
 };
 
 const options = {
-  maintainAspectRatio: true,
+  maintainAspectRatio: false,
   responsive: true,
   plugins: {
     legend: { position: "top" },
@@ -109,16 +109,19 @@ const options = {
 };
 
 return(
-    <div className = 'w-full h-full'> 
-        <Card elevation={3}>
-          {matchDataIsLoading?<div className = 'flex items-center justify-center h-96 '> <CircularProgress size={20} /></div>:
-            <CardContent>
-      <Line data={data} options={options} />
+<div className="w-full h-full"> 
+  <Card elevation={3} sx={{ height: '100%' }}>
+    {matchDataIsLoading ? (
+      <div className="flex items-center justify-center h-full">
+        <CircularProgress size={20} />
+      </div>
+    ) : (
+      <CardContent sx={{ height: '100%', padding: 2 }}>
+        <Line data={data} options={options} />
       </CardContent>
-}
-      </Card>
-          
-    </div>
+    )}
+  </Card>
+</div>
 )
 
 }
