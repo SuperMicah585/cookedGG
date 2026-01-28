@@ -233,9 +233,16 @@ async function GetPlayerMetaData(routingRegion,puuid) {
       error.status = response.status;
       throw error;
     }
-
+    const metaData = []
     const data = await response.json();
-    return [{...data[0],iconId:`https://ddragon.leagueoflegends.com/cdn/15.24.1/img/profileicon/${summonerData.profileIconId}.png`}];
+
+    for(const item of data){
+      if(item.queueType == 'RANKED_TFT'){
+        metaData.push(item)
+      }
+    }
+
+    return [{...metaData[0],iconId:`https://ddragon.leagueoflegends.com/cdn/15.24.1/img/profileicon/${summonerData.profileIconId}.png`}];
   } catch (error) {
     console.error(`Error fetching match data for game ${puuid}:`, error.message);
     throw error; // propagate to caller
