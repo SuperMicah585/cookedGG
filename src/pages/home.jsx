@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import SummonerInput from '../components/homeComponents/summonerInput'
 import NavBar from '../components/navBar'
-import TopLosers from '../components/homeComponents/topLosers'
 import Background from '../assets/TFTSet16Background.png'
+import Info from '../components/homeComponents/info'
 function Home() {
 
   return (
@@ -23,9 +23,13 @@ function Home() {
       <div className='flex w-full mt-12 md:mt-32 lg:mt-40 justify-center z-12'>
           <SummonerInput/>
       </div>
-      <div className = 'flex w-full p-5 sm:p-10 lg:p-20 justify-center z-12 mt-24'>
-        <TopLosers/>
+
+      <div className='flex flex-col lg:flex-row justify-center items-center z-20 flex mt-40 w-full gap-10 pb-20'>
+        <Info iconId = {1} title = 'Are You Cooked?' description='This tool shows the rank difference between the searched player and the lobby for the last 10 ranked games. You can see where you stand compared to other players in the data tab.'/>
+        <Info iconId = {20}  title = 'What Does This Mean?' description='If the searched player has a large positive difference, they most likely have bad MMR. Bad MMR will make one lose more points than gain in ranked matches.'/>
+        <Info iconId = {15} title = 'Things To Consider' description = 'High elo players(think top 500) will often have "bad" MMR because the match making system is unable to find similar ranked players. Another thing that might throw off MMR in this tracker is duoing with another player - especially if that player has a significantly different rank.'/>
       </div>
+
 
 </div>
     </div>

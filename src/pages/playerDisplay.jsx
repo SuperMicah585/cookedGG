@@ -220,7 +220,7 @@ return(
       {!matchDataIsLoading && <GenericTile dataColor = {'text-black'} data = {avgDifference.toFixed(2)} description = {"Average LP Difference"} descriptionColor = {avgDifference>=0?'text-red-500':'text-green-500'} />}
       {!matchDataIsLoading && <GenericTile dataColor = {'text-black'} data = {eloDiff>=0? '+' + eloDiff.toFixed(2): eloDiff.toFixed(2)} description = {"LP Last 10 Games"} descriptionColor = {eloDiff<=0?'text-red-500':'text-green-500'} />}
       </div>
-     <div className="w-full h-96 lg:h-[700px]">< PlayerAverageGraph matchDataIsLoading = {matchDataIsLoading} key={windowWidth} userMatches = {userMatches} player = {player} tag = {tag}/> </div>
+     <div className="w-full h-96 lg:h-[700px] mb-20 md:mb-0">< PlayerAverageGraph matchDataIsLoading = {matchDataIsLoading} key={windowWidth} userMatches = {userMatches} player = {player} tag = {tag}/> </div>
      </div>
 
 </div>

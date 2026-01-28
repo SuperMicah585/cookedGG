@@ -9,7 +9,7 @@ const GenericTile = ({data,description,dataColor,descriptionColor}) =>{
 <Card elevation={3}>
       <CardContent>
         <div className = 'flex flex-col w-full h-full'>
-            <div className = {`${descriptionColor} text-5xl`}>{data} </div>  
+            <div className = {`${descriptionColor} text-3xl md:text-5xl`}>{data} </div>  
             <div className = {`${dataColor}`}> {description}</div>
           
         </div>

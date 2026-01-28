@@ -82,7 +82,7 @@ const data = {
       tension: 0.4,
     },
     {
-      label: "lobby average",
+      label: "oppenent average",
       data: lobbyAverageRankPoints,
       borderColor: '#27272A',
       backgroundColor: '#65656dff',
@@ -96,7 +96,7 @@ const options = {
   responsive: true,
   plugins: {
     legend: { position: "top" },
-    title: { display: true, text: "Average Lobby Rank vs Player Rank (Points)" },
+    title: { display: true, text: "Average Opponent Rank vs Player Rank (Points)" },
   },
   scales: {
     y: {

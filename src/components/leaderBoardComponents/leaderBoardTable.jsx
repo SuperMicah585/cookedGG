@@ -80,7 +80,7 @@ const navigate = useNavigate();
  }}>
   <div className = 'flex gap-2 items-center'> 
              <img src = {chonc} className = 'w-15 h-15 z-20 rounded-full'/>
-             <div className = 'text-white text-extrabold text-4xl'>Players Ordered by Elo Difference</div>
+             <div className = 'text-white text-extrabold text-4xl'>Players by Rank vs Avg Opponent Rank</div>
     </div>
     </TableCell>
 
@@ -124,7 +124,7 @@ const navigate = useNavigate();
             {lowestMmrUserData.tier} {lowestMmrUserData.rank}
           </TableCell>
           <TableCell> {lowestMmrUserData.leaguepoints} </TableCell>
-          <TableCell>{Number(lowestMmrUserData.elo_difference).toFixed(1)}</TableCell>
+          <TableCell sx={{ backgroundColor: "F9FAFB", color: "#000" }} >{Number(lowestMmrUserData.elo_difference).toFixed(0)} LP</TableCell>
           <TableCell>{lowestMmrUserData.wins}</TableCell>
           <TableCell>{lowestMmrUserData.losses}</TableCell>
           <TableCell>{lowestMmrUserData.region}</TableCell>

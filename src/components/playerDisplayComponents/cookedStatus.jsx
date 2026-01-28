@@ -189,7 +189,7 @@ return(
           <TableRow>
             <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Game</TableCell>
             <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Player Elo</TableCell>
-            <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Average Lobby Elo</TableCell>
+            <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Average Opp Elo</TableCell>
             <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Elo Difference</TableCell>
             
           </TableRow>
