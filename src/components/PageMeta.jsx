@@ -57,6 +57,7 @@ export function PageMeta() {
     setMetaTag('og:title', meta.title, true)
     setMetaTag('og:description', meta.description, true)
     setMetaTag('og:url', window.location.href, true)
+    setMetaTag('og:site_name', 'cookedGG', true)
   }, [pathname])
 
   return null
