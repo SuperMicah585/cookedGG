@@ -34,7 +34,6 @@ const tierBase = {
 
   let points = tierBase[tier];
 
-  // Only add division points for ranks that have divisions
   if (tier !== "MASTER" && tier !== "GRANDMASTER" && tier !== "CHALLENGER") {
     if (division !== undefined) {
       points += (5 - division) * 100;

@@ -140,10 +140,9 @@ function getRegionMatch(routingRegion) {
       vn2: "SEA"           // Vietnam
     };
 
-  // Use bracket notation to access object by variable key
   const region = routingRelationship[routingRegion.toLowerCase()]
 
-  // Return the mapped region, or undefined if not found
+
   return region
 }
 
@@ -170,10 +169,8 @@ function getRegionAccount(routingRegion) {
       vn2: "ASIA"           // Vietnam
     };
 
-  // Use bracket notation to access object by variable key
-  const region = routingRelationship[routingRegion.toLowerCase()]
 
-  // Return the mapped region, or undefined if not found
+  const region = routingRelationship[routingRegion.toLowerCase()]
   return region
 }
 
