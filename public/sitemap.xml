@@ -10,4 +10,10 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  <!-- Add one <url> block per player you want Google to index. Replace player/tag/region with real values. -->
+  <url>
+    <loc>https://cookedgg-production.up.railway.app/player/PlayerName/tag/NA1</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
