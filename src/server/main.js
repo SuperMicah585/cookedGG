@@ -305,10 +305,11 @@ app.get('/api/getmatches/forplayer/:puuid/inregion/:region', async (req, res) =>
     const matchData = []
     const riotRegion = getRegionMatch(region)
     const matches = await getMatches(puuid,riotRegion)
+  
     while(matchData.length<10 && count<50) {
   
       const dataFromMetaTft = await getMatchData(matches[count])
-
+      console.log(dataFromMetaTft)
       if(dataFromMetaTft.queueId ==1100){
         matchData.push(dataFromMetaTft)
       }

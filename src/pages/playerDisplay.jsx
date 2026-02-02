@@ -11,6 +11,7 @@ import Alert from '@mui/material/Alert';
 
 
 function averageDifference(arr1, arr2) {
+  console.log(arr1,arr2)
   if (arr1.length !== arr2.length) {
     throw new Error('Arrays must be the same length');
   }
@@ -21,6 +22,23 @@ function averageDifference(arr1, arr2) {
   }
   
   return sum / arr1.length;
+}
+
+
+function filterNullRanks(data, targetRiotId) {
+    return data.filter(queueData => {
+        // Check if any player in this queue matches the target riot_id and has null rank
+        const targetPlayer = queueData.players?.find(player => player.riot_id === targetRiotId);
+        
+        // If player not found in this queue, keep it (or exclude it based on your needs)
+        // If player found, only keep if ranked is not null/undefined
+        if (targetPlayer) {
+            return targetPlayer.ranked != null;
+        }
+        
+        // If target player not in this queue, you can choose to keep or exclude
+        return true; // Change to false if you want to exclude queues without the target player
+    });
 }
 
 
@@ -56,7 +74,7 @@ const userMatchData = useMutation({
   },
   onSuccess: (data) => {
     const { matchData } = data
-    setUserMatches(matchData)
+    setUserMatches(filterNullRanks(matchData,player+'#'+tag))
 
     
   },
@@ -157,14 +175,16 @@ const updateUsertable = useMutation({
     
     const flatMatches = userMatches.map(item=>item.players).flat();
     // Get player rank points directly
+    
     const playerPoints = flatMatches
       .filter((item) => item.riot_id?.toLowerCase() === myRiotId?.toLowerCase())
       .map((item) => tierToPoints(item.ranked?.rating_text))
-      .filter(points => points > 0); // Remove 0 values (unranked)
+      .filter(rank => rank); // Remove undefined/null
+    
     
 
-
-    
+  
+    console.log(flatMatches.filter((item)=> item.riot_id=="Akari00n#EUNE"))
     // Calculate lobby average rank points (excluding the player)
     const lobbyAveragePoints = [];
     userMatches.forEach(match => {
@@ -192,7 +212,11 @@ const updateUsertable = useMutation({
         userPoints.push(points)
       }
     });
+    
+  
+  
     setEloDiff(userPoints[0][0]-userPoints[userPoints.length-1][0])
+    
     setAvgDifference(averageDifference(playerPoints,lobbyAveragePoints))
 
   }
