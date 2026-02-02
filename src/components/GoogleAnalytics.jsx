@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 
 const MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID
@@ -12,8 +12,6 @@ function loadGtag() {
     window.dataLayer.push(arguments)
   }
   window.gtag('js', new Date())
-
-  window.gtag('config', MEASUREMENT_ID)
 
   const script = document.createElement('script')
   script.async = true
@@ -33,6 +31,7 @@ function sendPageView(path, title) {
 
 export function GoogleAnalytics() {
   const location = useLocation()
+  const initialized = useRef(false)
 
   useEffect(() => {
     if (!MEASUREMENT_ID) return
@@ -40,9 +39,18 @@ export function GoogleAnalytics() {
   }, [])
 
   useEffect(() => {
-    if (!MEASUREMENT_ID) return
+    if (!MEASUREMENT_ID || !window.gtag) return
     const path = location.pathname + location.search
-    sendPageView(path, document.title)
+    const title = document.title
+
+    if (!initialized.current) {
+      // First run: initialize GA with the actual path so the first page_view isn’t always /
+      window.gtag('config', MEASUREMENT_ID, { page_path: path, page_title: title })
+      initialized.current = true
+    } else {
+      // Route change: send explicit page_view so GA sees unique pages
+      sendPageView(path, title)
+    }
   }, [location.pathname, location.search])
 
   return null
