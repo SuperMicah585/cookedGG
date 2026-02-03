@@ -75,7 +75,7 @@ const SummonerInput = () => {
 
 
         <div className = 'flex items-center justify-center w-full h-full h-full z-10 '> 
-          <p className = 'font-extrabold text-2xl'> How Cooked Is Your MMR? </p>
+          <p className = 'font-extrabold text-2xl text-black'> How Cooked Is Your MMR? </p>
           </div>
 
 
