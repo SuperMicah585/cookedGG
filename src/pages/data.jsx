@@ -22,7 +22,7 @@ return(
   {/* Background image - positioned absolutely */}
   <div className="absolute top-0 left-0 h-1/4 md:h-1/2 lg:h-3/4 w-full z-0">
     <img 
-      className="opacity-75 h-full w-full object-cover" 
+      className="opacity-60 h-full w-full object-cover" 
       src={TFTLeaderBoardBackGround} 
       alt="background"
     />

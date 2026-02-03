@@ -2,7 +2,6 @@ import Input from '@mui/material/Input';
 import InputAdornment from '@mui/material/InputAdornment';
 import React, { useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';
-import FryingPan from '../../assets/ItsCookedLogo.png'
 import { FormControl, Select, MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -76,8 +75,7 @@ const SummonerInput = () => {
 
 
         <div className = 'flex items-center justify-center w-full h-full h-full z-10 '> 
-          <img className = 'w-12 h-12' src = {FryingPan} />
-          <p className = 'font-bold text-3xl'> CookedGG </p>
+          <p className = 'font-extrabold text-2xl'> How Cooked Is Your MMR? </p>
           </div>
 
 

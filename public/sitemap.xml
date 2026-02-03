@@ -12,7 +12,7 @@
   </url>
   <!-- Add one <url> block per player you want Google to index. Replace player/tag/region with real values. -->
   <url>
-    <loc>https://cookedgg-production.up.railway.app/player/PlayerName/tag/NA1</loc>
+    <loc>https://cookedgg-production.up.railway.app/player/VIT%20K3soju/000/NA</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
