@@ -188,9 +188,9 @@ return(
         <TableHead>
           <TableRow>
             <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Game</TableCell>
-            <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Player Elo</TableCell>
-            <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Average Opp Elo</TableCell>
-            <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Elo Difference</TableCell>
+            <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Player LP</TableCell>
+            <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Opponent LP</TableCell>
+            <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>LP Difference</TableCell>
             
           </TableRow>
         </TableHead>
@@ -200,7 +200,14 @@ return(
               <TableCell>{index+1}</TableCell>
               <TableCell>{row?.playerPoints}</TableCell>
               <TableCell>{row?.lobbyAveragePoints}</TableCell>
-              <TableCell>{row?.difference}</TableCell>
+              <TableCell
+                sx={{
+                  color: (Number(row?.difference) ?? 0) >= 0 ? '#ef4444' : '#22c55e',
+                  fontWeight: 1000,
+                }}
+              >
+                {Math.round(Number(row?.difference))}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

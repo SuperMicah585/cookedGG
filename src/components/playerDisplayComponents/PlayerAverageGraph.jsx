@@ -71,6 +71,12 @@ const date = userMatches
   .map(item => new Date(item.dateTime).toLocaleDateString())
   .reverse();
 
+// Difference at each point: positive = player above lobby, negative = below
+const pointDifferences =
+  playerRankPoints.length === lobbyAverageRankPoints.length
+    ? playerRankPoints.map((p, i) => p - (lobbyAverageRankPoints[i] ?? 0))
+    : [];
+
 const data = {
   labels: date,
   datasets: [
@@ -82,7 +88,7 @@ const data = {
       tension: 0.4,
     },
     {
-      label: "oppenent average",
+      label: "opponent average",
       data: lobbyAverageRankPoints,
       borderColor: '#27272A',
       backgroundColor: '#65656dff',
@@ -97,8 +103,25 @@ const options = {
   plugins: {
     legend: { position: "top" },
     title: { display: true, text: "Average Opponent Rank vs Player Rank (Points)" },
+    tooltip: {
+      callbacks: {
+        afterBody: (tooltipItems) => {
+          const i = tooltipItems[0]?.dataIndex;
+          if (i == null || !pointDifferences[i]) return '';
+          const d = pointDifferences[i];
+          const sign = d >= 0 ? '+' : '';
+          return `Difference: ${sign}${Math.round(d)} pts`;
+        },
+      },
+    },
   },
   scales: {
+    x: {
+      title: {
+        display: true,
+        text: 'Match (chronological)'
+      }
+    },
     y: {
       title: {
         display: true,

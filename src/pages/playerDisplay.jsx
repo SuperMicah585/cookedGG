@@ -1,4 +1,5 @@
 import PlayerAverageGraph from '../components/playerDisplayComponents/PlayerAverageGraph';
+import PlayerScatterGraph from '../components/playerDisplayComponents/PlayerScatterGraph';
 import NavBar from '../components/navBar'
 import { useParams } from 'react-router-dom';
 import { useState,useEffect } from 'react';
@@ -8,6 +9,8 @@ import { useMutation } from '@tanstack/react-query'
 import { tierToPoints } from '../functions/rank_calculations';
 import GenericTile from '../components/playerDisplayComponents/genericTile.jsx';
 import Alert from '@mui/material/Alert';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 
 function averageDifference(arr1, arr2) {
@@ -52,6 +55,7 @@ const UserDisplay = () =>{
   const [avgDifference, setAvgDifference] = useState(0)
   const [eloDiff, setEloDiff] = useState(0)
   const [tableUpdateTrigger, setTableUpdateTrigger] = useState(0)
+  const [graphType, setGraphType] = useState('average')
 const validationMutation = useMutation({
   mutationFn: async ({ player, tag, region }) => {
     return userValidation(player, tag, region)
@@ -233,7 +237,6 @@ return(
       {validationMutation.isSuccess &&
     <div className = 'flex flex-col items-center relative w-full h-full bg-gray-50 overflow-y-scroll'>
       <NavBar/>
-      {userMatches.length<10 && matchDataIsLoading ==false && <Alert className = 'mt-5' severity="error">User does not have enough valid matches to be on the leaderboard</Alert>}
 <div className='flex flex-col lg:flex-row w-screen h-screen mt-5'>
     <div className = 'flex'> 
     <CookedStatus matchDataIsLoading = {matchDataIsLoading} tableUpdateTrigger = {tableUpdateTrigger} userMatches = {userMatches} userMetaDataObject = {userMetaDataObject} playerName = {`${player}#${tag}`}/>
@@ -244,7 +247,32 @@ return(
       {!matchDataIsLoading && <GenericTile dataColor = {'text-black'} data = {avgDifference.toFixed(2)} description = {"Average LP Difference"} descriptionColor = {avgDifference>=0?'text-red-500':'text-green-500'} />}
       {!matchDataIsLoading && <GenericTile dataColor = {'text-black'} data = {eloDiff>=0? '+' + eloDiff.toFixed(2): eloDiff.toFixed(2)} description = {"LP Last 10 Games"} descriptionColor = {eloDiff<=0?'text-red-500':'text-green-500'} />}
       </div>
-     <div className="w-full h-96 lg:h-[700px] mb-20 md:mb-0">< PlayerAverageGraph matchDataIsLoading = {matchDataIsLoading} key={windowWidth} userMatches = {userMatches} player = {player} tag = {tag}/> </div>
+     <div className="flex flex-col gap-2 w-full">
+      {matchDataIsLoading !== true && 
+        <ToggleButtonGroup
+          value={graphType}
+          exclusive
+          onChange={(_, value) => value != null && setGraphType(value)}
+          aria-label="graph type"
+          size="small"
+          sx={{ alignSelf: 'center' }}
+        >
+          <ToggleButton value="average" aria-label="average opponent rank">
+            Average
+          </ToggleButton>
+          <ToggleButton value="scatter" aria-label="opponents per match scatter">
+            Scatter
+          </ToggleButton>
+        </ToggleButtonGroup>
+}
+        <div className="w-full h-96 lg:h-[700px] mb-20 md:mb-0">
+          {graphType === 'average' ? (
+            <PlayerAverageGraph matchDataIsLoading={matchDataIsLoading} key={windowWidth} userMatches={userMatches} player={player} tag={tag} />
+          ) : (
+            <PlayerScatterGraph matchDataIsLoading={matchDataIsLoading} key={windowWidth} userMatches={userMatches} player={player} tag={tag} />
+          )}
+        </div>
+     </div>
      </div>
 
 </div>
