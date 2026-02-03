@@ -238,6 +238,11 @@ return(
       {validationMutation.isSuccess &&
     <div className = 'flex flex-col items-center relative w-full h-full bg-gray-50 overflow-y-scroll'>
       <NavBar/>
+      {!matchDataIsLoading && userMatchData.isSuccess && userMatches.length === 0 && (
+        <Alert severity="info" className="mt-4 mx-4">
+          There is no data for this user. Please make sure region is correct.
+        </Alert>
+      )}
 <div className='flex flex-col lg:flex-row w-screen h-screen mt-5'>
     <div className = 'flex shrink-0 lg:min-w-[320px]'> 
     <CookedStatus matchDataIsLoading={matchDataIsLoading} tableUpdateTrigger={tableUpdateTrigger} userMatches={userMatches} userMetaDataObject={userMetaDataObject} playerName={`${player}#${tag}`} gamesLimit={gamesLimit} setGamesLimit={setGamesLimit} />
