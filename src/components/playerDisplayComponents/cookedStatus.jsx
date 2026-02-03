@@ -6,6 +6,10 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import KitchenIcon from '@mui/icons-material/Kitchen';
+import WhatshotIcon from '@mui/icons-material/Whatshot';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -28,9 +32,18 @@ import grandmaster from '../../assets/grandmaster.png'
 import challenger from '../../assets/challenger.png'
 import emerald from '../../assets/emerald.png'
 import chonc from '../../assets/chonc.png'
+import SummaryPill from './SummaryPill';
 
+const TOOLTIP = {
+  cooked: 'Top 20% of LP differences',
+  raw: 'Bottom 20% of LP differences',
+  hot: 'Gained more than 75 LP in the selected games.',
+  cold: 'Lost more than 75 LP in the selected games.',
+};
 
-const CookedStatus = ({userMatches, playerName,userMetaDataObject,tableUpdateTrigger, matchDataIsLoading}) =>{
+const GAMES_LIMIT_OPTIONS = [10, 20, 30];
+
+const CookedStatus = ({ userMatches, playerName, userMetaDataObject, tableUpdateTrigger, matchDataIsLoading, gamesLimit, setGamesLimit }) => {
 const [anchorEl, setAnchorEl] = useState(null);
 const [userMetaData,setUserMetaData] = useState({puuid: '', wins:0,losses:0,tier:'',rank:'',leaguePoints:0})
 const [dataForTable, setDataForTable] = useState([])
@@ -115,6 +128,31 @@ useEffect(() => {
   }
 }, [userMatches]);
 
+  // LP change over last 10 games: positive = lost LP, negative = gained LP (matches playerDisplay eloDiff logic)
+  const lpChangeLast10 =
+    dataForTable.length >= 2
+      ? dataForTable[dataForTable.length - 1].playerPoints - dataForTable[0].playerPoints
+      : null;
+
+  const cookedRawLabel =
+    userPositionData.totalUsers > 0
+      ? userPositionData.percentile <= 20
+        ? 'Cooked'
+        : userPositionData.percentile >= 80
+          ? 'Raw'
+          : null
+      : null;
+
+  // Hot = gained 75+ LP (positive value e.g. 160), Cold = lost 75+ LP (negative value)
+  const hotColdLabel =
+    lpChangeLast10 != null
+      ? lpChangeLast10 > 75
+        ? 'Hot'
+        : lpChangeLast10 < -75
+          ? 'Cold'
+          : null
+      : null;
+
 
     const tierIcons = {
       IRON: iron,
@@ -132,10 +170,66 @@ useEffect(() => {
 return(
     <div className = 'flex flex-col gap-2 ml-2 mr-2 h-full w-full'> 
     
-    <div className = 'flex gap-2 items-center'> 
-      
-        <img className = 'w-20 h-20 rounded-full' src={userMetaData.iconId} alt="Summoner Icon" />
-      <div className = 'font-bold text-2xl font-bold text-black'>{playerName}</div>
+    <div className = 'flex flex-col gap-2'> 
+      <div className = 'flex gap-2 items-start'> 
+        <img className = 'w-20 h-20 rounded-full shrink-0' src={userMetaData.iconId} alt="Summoner Icon" />
+        <div className="flex flex-col gap-1">
+          <div className = 'font-bold text-2xl font-bold text-black'>{playerName}</div>
+          {setGamesLimit != null && (
+            <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+              <span>Games to analyze:</span>
+              <select
+                value={gamesLimit ?? 10}
+                onChange={(e) => setGamesLimit(Number(e.target.value))}
+                disabled={matchDataIsLoading}
+                className="rounded border border-gray-300 bg-white px-2 py-1 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {GAMES_LIMIT_OPTIONS.map((n) => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
+              </select>
+            </label>
+          )}
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-2 items-center">
+        {cookedRawLabel && (
+          <SummaryPill
+            label={cookedRawLabel}
+            icon={
+              cookedRawLabel === 'Cooked' ? (
+                <LocalFireDepartmentIcon sx={{ fontSize: 18 }} />
+              ) : (
+                <KitchenIcon sx={{ fontSize: 18 }} />
+              )
+            }
+            colorClasses={
+              cookedRawLabel === 'Cooked'
+                ? 'text-amber-800 border-amber-800'
+                : 'text-green-600 border-green-600'
+            }
+            tooltip={cookedRawLabel === 'Cooked' ? TOOLTIP.cooked : TOOLTIP.raw}
+          />
+        )}
+        {hotColdLabel && (
+          <SummaryPill
+            label={hotColdLabel}
+            icon={
+              hotColdLabel === 'Hot' ? (
+                <WhatshotIcon sx={{ fontSize: 18 }} />
+              ) : (
+                <AcUnitIcon sx={{ fontSize: 18 }} />
+              )
+            }
+            colorClasses={
+              hotColdLabel === 'Hot'
+                ? 'text-red-600 border-red-600'
+                : 'text-blue-600 border-blue-600'
+            }
+            tooltip={hotColdLabel === 'Hot' ? TOOLTIP.hot : TOOLTIP.cold}
+          />
+        )}
+      </div>
     </div>
     <Card elevation={3}>
       {!matchDataIsLoading &&
@@ -183,25 +277,35 @@ return(
     </Card>
 
 {matchDataIsLoading? <Card elevation={3} ><div className = 'w-full h-96 flex items-center justify-center'> <CircularProgress size={20} /></div></Card>:
-        <TableContainer component={Paper}>
-      <Table>
+        <TableContainer
+          component={Paper}
+          sx={(theme) => ({
+            maxHeight: 420,
+            [theme.breakpoints.up('lg')]: { maxHeight: 560 },
+          })}
+          className="overflow-auto"
+        >
+      <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Game</TableCell>
-            <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Player LP</TableCell>
-            <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>Opponent LP</TableCell>
-            <TableCell sx={{ backgroundColor: "#27272A", color: "white" }}>LP Difference</TableCell>
+            <TableCell sx={{ backgroundColor: "#27272A", color: "white", fontSize: "1rem", py: 1.5, px: 2 }}>Game</TableCell>
+            <TableCell sx={{ backgroundColor: "#27272A", color: "white", fontSize: "1rem", py: 1.5, px: 2 }}>Player LP</TableCell>
+            <TableCell sx={{ backgroundColor: "#27272A", color: "white", fontSize: "1rem", py: 1.5, px: 2 }}>Opponent LP</TableCell>
+            <TableCell sx={{ backgroundColor: "#27272A", color: "white", fontSize: "1rem", py: 1.5, px: 2 }}>LP Difference</TableCell>
             
           </TableRow>
         </TableHead>
         <TableBody>
           {dataForTable.map((row,index) => (
             <TableRow key={row.id}>
-              <TableCell>{index+1}</TableCell>
-              <TableCell>{row?.playerPoints}</TableCell>
-              <TableCell>{row?.lobbyAveragePoints}</TableCell>
+              <TableCell sx={{ fontSize: "0.95rem", py: 1.5, px: 2 }}>{index+1}</TableCell>
+              <TableCell sx={{ fontSize: "0.95rem", py: 1.5, px: 2 }}>{row?.playerPoints}</TableCell>
+              <TableCell sx={{ fontSize: "0.95rem", py: 1.5, px: 2 }}>{row?.lobbyAveragePoints}</TableCell>
               <TableCell
                 sx={{
+                  fontSize: "0.95rem",
+                  py: 1.5,
+                  px: 2,
                   color: (Number(row?.difference) ?? 0) >= 0 ? '#ef4444' : '#22c55e',
                   fontWeight: 1000,
                 }}

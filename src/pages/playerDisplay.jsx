@@ -56,6 +56,7 @@ const UserDisplay = () =>{
   const [eloDiff, setEloDiff] = useState(0)
   const [tableUpdateTrigger, setTableUpdateTrigger] = useState(0)
   const [graphType, setGraphType] = useState('average')
+  const [gamesLimit, setGamesLimit] = useState(10)
 const validationMutation = useMutation({
   mutationFn: async ({ player, tag, region }) => {
     return userValidation(player, tag, region)
@@ -73,8 +74,8 @@ const validationMutation = useMutation({
 
 
 const userMatchData = useMutation({
-  mutationFn: async ({ summoner,region }) => {
-    return getMatchData(summoner[0].puuid, region)
+  mutationFn: async ({ summoner, region, gamesLimit }) => {
+    return getMatchData(summoner[0].puuid, region, gamesLimit ?? 10)
   },
   onSuccess: (data) => {
     const { matchData } = data
@@ -122,7 +123,7 @@ const updateUsertable = useMutation({
 })
 
   useEffect(()=>{
-    if(avgDifference!=0 && summoner.length>0 && userMetaDataObject.length>0 && userMatches.length == 10){
+    if(avgDifference!=0 && summoner.length>0 && userMetaDataObject.length>0 && userMatches.length === gamesLimit){
 
     const userData = {
       puuid: summoner[0].puuid,
@@ -141,7 +142,7 @@ const updateUsertable = useMutation({
     }
 
 
-  },[avgDifference,summoner,userMatches])
+  },[avgDifference,summoner,userMatches,gamesLimit])
 
 
   useEffect(() => {
@@ -161,7 +162,7 @@ const updateUsertable = useMutation({
   useEffect(() => {
 
     if(summoner.length>0 && region.length>0){
-    userMatchData.mutate({summoner,region})
+    userMatchData.mutate({summoner,region,gamesLimit})
     userMetaData.mutate({summoner,region})
     }
     const handleResize = () => {
@@ -170,7 +171,7 @@ const updateUsertable = useMutation({
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [summoner,region]);
+  }, [summoner,region,gamesLimit]);
 
 
   useEffect(() => {
@@ -238,33 +239,36 @@ return(
     <div className = 'flex flex-col items-center relative w-full h-full bg-gray-50 overflow-y-scroll'>
       <NavBar/>
 <div className='flex flex-col lg:flex-row w-screen h-screen mt-5'>
-    <div className = 'flex'> 
-    <CookedStatus matchDataIsLoading = {matchDataIsLoading} tableUpdateTrigger = {tableUpdateTrigger} userMatches = {userMatches} userMetaDataObject = {userMetaDataObject} playerName = {`${player}#${tag}`}/>
+    <div className = 'flex shrink-0 lg:min-w-[320px]'> 
+    <CookedStatus matchDataIsLoading={matchDataIsLoading} tableUpdateTrigger={tableUpdateTrigger} userMatches={userMatches} userMetaDataObject={userMetaDataObject} playerName={`${player}#${tag}`} gamesLimit={gamesLimit} setGamesLimit={setGamesLimit} />
     </div>
     
-    <div className = 'flex flex-col gap-2 w-full pl-2 pr-2 sm:pl-10 sm:pr-10 lg:pl-20 lg:pr-20'> 
-      <div className = 'flex gap-1 lg:mt-0 mt-2 max-h-32 items-center justify-center lg:gap-5'> 
+    <div className = 'flex flex-col gap-2 w-full pl-2 pr-2 sm:pl-10 sm:pr-10 lg:pl-20 lg:pr-20 relative'> 
+
+      <div className = 'flex gap-2 lg:mt-0 mt-2 max-h-32 items-center justify-center lg:gap-5'> 
       {!matchDataIsLoading && <GenericTile dataColor = {'text-black'} data = {avgDifference.toFixed(2)} description = {"Average LP Difference"} descriptionColor = {avgDifference>=0?'text-red-500':'text-green-500'} />}
-      {!matchDataIsLoading && <GenericTile dataColor = {'text-black'} data = {eloDiff>=0? '+' + eloDiff.toFixed(2): eloDiff.toFixed(2)} description = {"LP Last 10 Games"} descriptionColor = {eloDiff<=0?'text-red-500':'text-green-500'} />}
+      {!matchDataIsLoading && <GenericTile dataColor = {'text-black'} data = {eloDiff>=0? '+' + eloDiff.toFixed(2): eloDiff.toFixed(2)} description = {`LP Last ${gamesLimit} Games`} descriptionColor = {eloDiff<=0?'text-red-500':'text-green-500'} />}
       </div>
      <div className="flex flex-col gap-2 w-full">
-      {matchDataIsLoading !== true && 
-        <ToggleButtonGroup
-          value={graphType}
-          exclusive
-          onChange={(_, value) => value != null && setGraphType(value)}
-          aria-label="graph type"
-          size="small"
-          sx={{ alignSelf: 'center' }}
-        >
-          <ToggleButton value="average" aria-label="average opponent rank">
-            Average
-          </ToggleButton>
-          <ToggleButton value="scatter" aria-label="opponents per match scatter">
-            Scatter
-          </ToggleButton>
-        </ToggleButtonGroup>
-}
+      {matchDataIsLoading !== true && (
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <ToggleButtonGroup
+            value={graphType}
+            exclusive
+            onChange={(_, value) => value != null && setGraphType(value)}
+            aria-label="graph type"
+            size="small"
+            sx={{ alignSelf: 'center' }}
+          >
+            <ToggleButton value="average" aria-label="average opponent rank">
+              Average
+            </ToggleButton>
+            <ToggleButton value="scatter" aria-label="opponents per match scatter">
+              Scatter
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+      )}
         <div className="w-full h-96 lg:h-[700px] mb-20 md:mb-0">
           {graphType === 'average' ? (
             <PlayerAverageGraph matchDataIsLoading={matchDataIsLoading} key={windowWidth} userMatches={userMatches} player={player} tag={tag} />

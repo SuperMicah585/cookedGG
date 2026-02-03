@@ -20,11 +20,13 @@ export async function userValidation(name,tag,region){
 
 
 
-export async function getMatchData(puiid, region){
+export async function getMatchData(puiid, region, limit = 10){
     try {
-        const response = await fetch(
-      `${baseURL}/api/getmatches/forplayer/${puiid}/inregion/${region}`
-    );
+        const params = new URLSearchParams();
+        if (limit != null) params.set('limit', String(limit));
+        const query = params.toString();
+        const url = `${baseURL}/api/getmatches/forplayer/${puiid}/inregion/${region}${query ? `?${query}` : ''}`;
+        const response = await fetch(url);
       
     if (!response.ok) {
       const error = await response.json();

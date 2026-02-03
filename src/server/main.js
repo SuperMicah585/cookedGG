@@ -298,27 +298,29 @@ app.get('/api/player/:username/:tag/:region', async (req, res) => {
 });
 
 
+const VALID_GAME_LIMITS = [10, 20, 30];
+
 app.get('/api/getmatches/forplayer/:puuid/inregion/:region', async (req, res) => {
-  const { puuid,region } = req.params;
+  const { puuid, region } = req.params;
+  const limitParam = req.query.limit != null ? parseInt(req.query.limit, 10) : 10;
+  const limit = VALID_GAME_LIMITS.includes(limitParam) ? limitParam : 10;
   try {
-    var count = 0
-    const matchData = []
-    const riotRegion = getRegionMatch(region)
-    const matches = await getMatches(puuid,riotRegion)
-  
-    while(matchData.length<10 && count<50) {
-  
-      const dataFromMetaTft = await getMatchData(matches[count])
-      console.log(dataFromMetaTft)
-      if(dataFromMetaTft.queueId ==1100){
-        matchData.push(dataFromMetaTft)
+    let count = 0;
+    const matchData = [];
+    const riotRegion = getRegionMatch(region);
+    const matchIdCount = Math.max(50, limit * 2);
+    const matches = await getMatches(puuid, riotRegion, matchIdCount);
+
+    while (matchData.length < limit && count < matches.length) {
+      const dataFromMetaTft = await getMatchData(matches[count]);
+      console.log(dataFromMetaTft);
+      if (dataFromMetaTft.queueId == 1100) {
+        matchData.push(dataFromMetaTft);
       }
+      count += 1;
+    }
 
-      count+=1
-  }
-
-
-    res.json({ matchData});
+    res.json({ matchData });
 
   
   } catch (error) {
