@@ -8,7 +8,7 @@ function Home() {
 
   return (
 <div className ='absolute left-0 top-0 w-screen h-screen bg-white'>
-    <div className = 'flex flex-col relative w-full h-full bg-gray-100 overflow-y-scroll'>
+    <div className = 'flex flex-col relative w-full h-full bg-gray-100'>
     <div className = 'w-full z-12'>
       <NavBar/>
     </div>
