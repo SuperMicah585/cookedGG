@@ -263,7 +263,36 @@ return(
             onChange={(_, value) => value != null && setGraphType(value)}
             aria-label="graph type"
             size="small"
-            sx={{ alignSelf: 'center' }}
+            sx={{
+              alignSelf: 'center',
+              gap: '8px',
+              '& .MuiToggleButtonGroup-grouped': {
+                border: '2px solid #475569',
+                borderRadius: '4px',
+                px: 2.5,
+                py: 1.25,
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                backgroundColor: '#64748b',
+                color: '#cbd5e1',
+                transition: 'all 0.15s ease',
+                '&:hover': {
+                  backgroundColor: '#475569',
+                  color: '#f1f5f9',
+                },
+                '&.Mui-selected': {
+                  backgroundColor: '#0ea5e9',
+                  color: '#fff',
+                  borderColor: '#0284c7',
+                  outline: '2px solid #0ea5e9',
+                  outlineOffset: '2px',
+                  '&:hover': {
+                    backgroundColor: '#38bdf8',
+                  },
+                },
+              },
+            }}
           >
             <ToggleButton value="average" aria-label="average opponent rank">
               Average
