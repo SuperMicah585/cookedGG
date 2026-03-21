@@ -198,7 +198,7 @@ async function getMatches(puuid, region, count = 50) {
 
 async function getMatchData(gameId) {
   try {
-    const url = `https://metatft-matches-2.ams3.digitaloceanspaces.com/${gameId}.json`;
+    const url = `https://matches3.metatft.com/${gameId}.json`;
   
     const response = await fetch(url);
 
