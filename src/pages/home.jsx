@@ -1,9 +1,8 @@
-import { useState } from 'react'
 import SummonerInput from '../components/homeComponents/summonerInput'
 import NavBar from '../components/navBar'
 import Background from '../assets/tftLeaderBoard.png'
 import Info from '../components/homeComponents/info'
-import { LinkButton } from '../components/homeComponents/LinkButton'
+import { PopularPlayersCarousel } from '../components/homeComponents/PopularPlayersCarousel'
 function Home() {
 
   return (
@@ -25,13 +24,8 @@ function Home() {
           <SummonerInput/>
       </div>
 
-    <div className="flex flex-col items-center gap-3 mt-32 z-20">
-      <span className="text-gray-600 text-sm font-medium uppercase tracking-wide">Popular players</span>
-      <div className="flex flex-wrap gap-3 justify-center">
-        <LinkButton name="K3soju" link="/player/VIT%20K3soju/000/NA" />
-        <LinkButton name="Setsuko" link="/player/vit%20setsuko/na2/NA" />
-        <LinkButton name="Darth Nub" link="/player/Darth%20Nub/NA2/NA" />
-      </div>
+    <div className="mt-32 z-20 w-full px-2">
+      <PopularPlayersCarousel />
     </div>
 
       <div className='flex flex-col lg:flex-row justify-center items-center z-20 flex mt-12 w-full gap-10 pb-20'>

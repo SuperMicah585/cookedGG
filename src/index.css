@@ -1,5 +1,24 @@
 @import "tailwindcss";
 
+/* Popular players: seamless horizontal marquee (duplicated row, translate -50%) */
+@keyframes popular-players-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.popular-players-marquee-track {
+  animation: popular-players-marquee 45s linear infinite;
+}
+
+.popular-players-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+
 :root {
   font-family: 'Audiowide', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
