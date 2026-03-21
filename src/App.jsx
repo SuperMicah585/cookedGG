@@ -1,3 +1,4 @@
+import React from 'react'
 import Home from './pages/home'
 import UserDisplay from './pages/playerDisplay'
 import { Routes, Route } from "react-router-dom"
@@ -8,8 +9,8 @@ import { PageMeta } from './components/PageMeta'
 const queryClient = new QueryClient()
 import './App.css'
 import './index.css'
-function App() {
 
+function App() {
 
   return (
   
@@ -20,8 +21,6 @@ function App() {
     <Route path="/" element={<Home />} />
     <Route path="/player/:player/:tag/:region" element={<UserDisplay />} />
     <Route path="/data" element={<Data />} />
-
-
   </Routes>
 </QueryClientProvider>
   )

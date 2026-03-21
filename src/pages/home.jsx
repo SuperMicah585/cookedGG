@@ -30,7 +30,7 @@ function Home() {
       <div className="flex flex-wrap gap-3 justify-center">
         <LinkButton name="K3soju" link="/player/VIT%20K3soju/000/NA" />
         <LinkButton name="Setsuko" link="/player/vit%20setsuko/na2/NA" />
-        <LinkButton name="Dishsoap" link="/player/dishsoap/na3/NA" />
+        <LinkButton name="Darth Nub" link="/player/Darth%20Nub/NA2/NA" />
       </div>
     </div>
 
