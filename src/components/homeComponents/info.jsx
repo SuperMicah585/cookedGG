@@ -4,7 +4,7 @@ import { Card,CardContent } from "@mui/material";
 const Info = ({description,title,iconId}) =>{
 
 
-const randomIcon = `https://ddragon.leagueoflegends.com/cdn/15.24.1/img/profileicon/${iconId}.png`
+const randomIcon = `https://ddragon.leagueoflegends.com/cdn/16.9.1/img/profileicon/${iconId}.png`
     return(
 <Card elevation={3} className="w-80 md:w-92 h-72">
   <CardContent>

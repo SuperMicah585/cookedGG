@@ -20,6 +20,15 @@ app.use(cors())
 
 app.use(express.json())
 const apiKey = process.env.riotApiKey;
+const METATFT_HEADERS = {
+  'accept': 'application/json,text/plain,*/*',
+  'accept-language': 'en-US,en;q=0.9',
+  'cache-control': 'no-cache',
+  'pragma': 'no-cache',
+  'referer': 'https://metatft.com/',
+  'user-agent':
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+};
 //Get list of matches from /lol/match/v5/matches/by-puuid/{puuid}/ids
 //Pull last 10 matches from https://metatft-matches-2.ams3.digitaloceanspaces.com/NA1_5449502245.json
 
@@ -198,9 +207,9 @@ async function getMatches(puuid, region, count = 50) {
 
 async function getMatchData(gameId) {
   try {
-    const url = `https://metatft-matches-2.ams3.digitaloceanspaces.com/${gameId}.json`;
+    const url = `https://matches3.metatft.com/${gameId}.json`;
   
-    const response = await fetch(url);
+    const response = await fetch(url, { headers: METATFT_HEADERS });
 
     if (!response.ok) {
       const error = new Error(`Match data fetch error: ${response.status} ${response.statusText}`);
@@ -213,7 +222,7 @@ async function getMatchData(gameId) {
     return players
 
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -239,7 +248,7 @@ async function GetPlayerMetaData(routingRegion,puuid) {
       }
     }
 
-    return [{...metaData[0],iconId:`https://ddragon.leagueoflegends.com/cdn/15.24.1/img/profileicon/${summonerData.profileIconId}.png`}];
+    return [{...metaData[0],iconId:`https://ddragon.leagueoflegends.com/cdn/16.9.1/img/profileicon/${summonerData.profileIconId}.png`}];
   } catch (error) {
     console.error(`Error fetching match data for game ${puuid}:`, error.message);
     throw error; // propagate to caller
@@ -307,17 +316,32 @@ app.get('/api/getmatches/forplayer/:puuid/inregion/:region', async (req, res) =>
   try {
     let count = 0;
     const matchData = [];
+    let blockedCount = 0;
     const riotRegion = getRegionMatch(region);
     const matchIdCount = Math.max(50, limit * 2);
     const matches = await getMatches(puuid, riotRegion, matchIdCount);
 
     while (matchData.length < limit && count < matches.length) {
-      const dataFromMetaTft = await getMatchData(matches[count]);
-      console.log(dataFromMetaTft);
-      if (dataFromMetaTft.queueId == 1100) {
-        matchData.push(dataFromMetaTft);
+      try {
+        const dataFromMetaTft = await getMatchData(matches[count]);
+        if (dataFromMetaTft.queueId == 1100) {
+          matchData.push(dataFromMetaTft);
+        }
+      } catch (error) {
+        if (error.status === 403) {
+          blockedCount += 1;
+          if (blockedCount <= 3) {
+            console.warn(`MetaTFT blocked match ${matches[count]} (403)`);
+          }
+        } else {
+          throw error;
+        }
       }
       count += 1;
+    }
+
+    if (blockedCount > 0) {
+      console.warn(`MetaTFT blocked ${blockedCount} match fetches in this request`);
     }
 
     res.json({ matchData });

@@ -29,7 +29,7 @@ function sendPageView(path, title) {
   })
 }
 
-export function GoogleAnalytics() {
+export function RouteTracker() {
   const location = useLocation()
   const initialized = useRef(false)
 
